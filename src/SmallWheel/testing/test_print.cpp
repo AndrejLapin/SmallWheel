@@ -1,8 +1,8 @@
-#include "test_print.h"
+#include "test_print.hpp"
 #include <stdio.h>
 
 namespace swheel {
     void test_print() {
-        printf("Hello from small wheel! %s\n", POOPY);
+        printf("Hello from small wheel!\n");
     }
 }
