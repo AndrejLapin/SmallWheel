@@ -1,5 +1,5 @@
 #pragma once
 
 namespace swheel {
-    void test_print();
+    __declspec(dllexport) void test_print();
 }
