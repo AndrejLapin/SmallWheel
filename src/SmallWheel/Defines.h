@@ -9,9 +9,3 @@
 #else
     #error SmallWheel only supports windows
 #endif
-
-#ifdef TEST_DEFINE
-    #define POOPY "poopy"
-#else
-    #define POOPY "Not poopy"
-#endif
