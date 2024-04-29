@@ -3,7 +3,7 @@
 #include "SmallWheel/Defines.hpp"
 
 namespace swheel {
-    class SWHEEL_API Application {
+    class Application {
     public:
         Application();
         virtual ~Application();

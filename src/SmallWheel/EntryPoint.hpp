@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef SW_PLATFORM_WINDOWS
-
 extern swheel::Application* swheel::CreateApplication();
 
 int main(int argc, char** argv)
@@ -10,5 +8,3 @@ int main(int argc, char** argv)
     app->Run();
     delete app;
 }
-
-#endif // SW_PLATFORM_WINDOWS
