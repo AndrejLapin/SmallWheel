@@ -7,10 +7,16 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 file(GLOB_RECURSE PROJECT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 set(PROJECT_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
+
 add_library(SmallWheel STATIC ${PROJECT_SOURCE})
 target_include_directories(SmallWheel PRIVATE ${PROJECT_INCLUDES})
 
-if(WIN32)
-    add_compile_definitions(SW_PLATFORM_WINDOWS)
-endif()
-add_compile_definitions(SW_BUILD_DLL)
+add_subdirectory(SDL)
+set(SDL_TEST FALSE)
+set(SDL_SHARED FALSE)
+target_link_libraries(SmallWheel SDL2-static)
+
+# if(WIN32)
+#     add_compile_definitions(SW_PLATFORM_WINDOWS)
+# endif()
+# add_compile_definitions(SW_BUILD_DLL)
