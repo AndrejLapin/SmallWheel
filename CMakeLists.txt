@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS True)
+
 file(GLOB_RECURSE PROJECT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 set(PROJECT_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
@@ -11,10 +13,18 @@ set(PROJECT_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 add_library(SmallWheel STATIC ${PROJECT_SOURCE})
 target_include_directories(SmallWheel PRIVATE ${PROJECT_INCLUDES})
 
-add_subdirectory(SDL)
 set(SDL_TEST FALSE)
 set(SDL_SHARED FALSE)
+add_subdirectory(SDL)
+# target_include_directories
 target_link_libraries(SmallWheel SDL2-static)
+
+add_subdirectory(GLAD)
+target_link_libraries(SmallWheel GLAD)
+
+find_package(OpenGL REQUIRED)
+message("OpenGL found ${OPENGL_FOUND}")
+target_link_libraries(SmallWheel ${OPENGL_LIBRARIES})
 
 # if(WIN32)
 #     add_compile_definitions(SW_PLATFORM_WINDOWS)

@@ -1,8 +1,7 @@
 #pragma once
 
+#include "SDL_video.h"
 #include <string>
-
-class SDL_Window;
 
 namespace swheel {
     class SDL2Window {
@@ -24,5 +23,6 @@ namespace swheel {
         bool m_closed = false;
 
         SDL_Window* m_window = nullptr;
+        SDL_GLContext m_context = nullptr;
     };
 }

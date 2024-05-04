@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "SDL_events.h"
+#include <cstddef>
 #include <iostream>
 
 namespace swheel {
@@ -13,18 +14,12 @@ namespace swheel {
     }
 
     SDL2Window::~SDL2Window() {
+        SDL_GL_DeleteContext(m_context);
         SDL_DestroyWindow(m_window);
         SDL_Quit();
     }
 
     bool SDL2Window::Init() {
-        // Might need to SDL_INIT_EVERYTHING
-        // Maybe SDL initialization should be global/shared between many windows
-        if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-            std::cerr << "Failed to initialize SDL.\n";
-            return false;
-        }
-
         m_window = SDL_CreateWindow(
             m_title.c_str(),
             SDL_WINDOWPOS_CENTERED,
@@ -35,6 +30,13 @@ namespace swheel {
 
         if (m_window == nullptr) {
             std::cerr << "Failed to create window.\n";
+            return false;
+        }
+
+        m_context = SDL_GL_CreateContext(m_window);
+
+        if (m_context == nullptr) {
+            std::cerr << "OpenGL context not avalibale\n";
             return false;
         }
 
