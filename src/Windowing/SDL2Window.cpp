@@ -25,7 +25,7 @@ namespace swheel {
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
             m_width, m_height,
-            0
+            SDL_WINDOW_OPENGL
         );
 
         if (m_window == nullptr) {

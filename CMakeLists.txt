@@ -22,10 +22,6 @@ target_link_libraries(SmallWheel SDL2-static)
 add_subdirectory(GLAD)
 target_link_libraries(SmallWheel GLAD)
 
-find_package(OpenGL REQUIRED)
-message("OpenGL found ${OPENGL_FOUND}")
-target_link_libraries(SmallWheel ${OPENGL_LIBRARIES})
-
 # if(WIN32)
 #     add_compile_definitions(SW_PLATFORM_WINDOWS)
 # endif()

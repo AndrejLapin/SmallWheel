@@ -32,12 +32,22 @@ namespace swheel {
             }
         }
 
+        SDL_GL_LoadLibrary(nullptr);
+
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
-        SDL_GL_LoadLibrary(nullptr);
+        // Maybe make it so you can create multiple windows?
+        // gladLoaderLoadGL()
+        assert(!m_window);
+        m_window = new SDL2Window(title, width, height);
+
+        auto error = SDL_GetError();
+        if (error && error[0] != 0) {
+            std::cerr << error << "\n";
+        }
 
         int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
         if (version == 0) {
@@ -47,11 +57,6 @@ namespace swheel {
         }
         std::cout << glGetError << "\n";
         std::cout << "GL version - " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << "\n";
-
-        // Maybe make it so you can create multiple windows?
-        // gladLoaderLoadGL()
-        assert(!m_window);
-        m_window = new SDL2Window(title, width, height);
     }
 
     void Application::Run() {
