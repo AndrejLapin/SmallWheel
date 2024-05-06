@@ -9,6 +9,8 @@
 
 #include <iostream>
 #include <cassert>
+#include <memory>
+#include <vector>
 
 namespace swheel {
 
@@ -28,13 +30,13 @@ namespace swheel {
     }
 
     Application::~Application() {
-        delete m_window;
+        SDL_Quit();
     }
 
     void Application::CreateWindow(const std::string& title, int width, int height) {
         // Maybe make it so you can create multiple windows?
-        assert(!m_window);
-        m_window = new OpenGLWindow(title, width, height);
+        // assert(!m_window);
+        m_windows.push_back(std::make_unique<OpenGLWindow>(title, width, height));
 
         if (!m_gladInitialized) {
             InitGlad();
@@ -42,11 +44,22 @@ namespace swheel {
     }
 
     void Application::Run() {
-        while (!m_window->IsClosed()) {
-            Event event;
+        Event event;
+        while (m_windows.size() > 0) {
             while(SDL_PollEvent(&event)) {
-                m_window->OnEvent(event);
+                auto window = m_windows.begin();
+                do {
+                    window->get()->OnEvent(event);
+                } while (++window != m_windows.end() && !event.m_handled);
             }
+            auto window = m_windows.begin();
+            do {
+                if (window->get()->IsClosed()) {
+                    m_windows.erase(window);
+                } else {
+                    ++window;
+                }
+            } while (window != m_windows.end());
         }
     }
 

@@ -17,7 +17,6 @@ namespace swheel {
     OpenGLWindow::~OpenGLWindow() {
         SDL_GL_DeleteContext(m_context);
         SDL_DestroyWindow(m_window);
-        SDL_Quit();
     }
 
     // Need to just register events and then dispatch them
@@ -31,6 +30,7 @@ namespace swheel {
             switch(event.m_event.window.event) {
             case SDL_WINDOWEVENT_CLOSE: {
                 m_closed = true;
+                event.m_handled = true;
                 break;
             }
             }

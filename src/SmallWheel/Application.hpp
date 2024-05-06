@@ -1,6 +1,8 @@
 #pragma once
 
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace swheel {
     class Window;
@@ -18,7 +20,7 @@ namespace swheel {
 
     private:
         bool m_gladInitialized = false;
-        Window* m_window = nullptr;
+        std::vector<std::unique_ptr<Window>> m_windows;
     };
 
     // To be defined in a Client
