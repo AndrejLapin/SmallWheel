@@ -3,7 +3,7 @@
 #include <string>
 
 namespace swheel {
-    class SDL2Window;
+    class Window;
 
     class Application {
     public:
@@ -12,8 +12,13 @@ namespace swheel {
         void CreateWindow(const std::string& title, int width, int height);
 
         void Run();
+
     private:
-        SDL2Window* m_window = nullptr;
+        void InitGlad();
+
+    private:
+        bool m_gladInitialized = false;
+        Window* m_window = nullptr;
     };
 
     // To be defined in a Client
