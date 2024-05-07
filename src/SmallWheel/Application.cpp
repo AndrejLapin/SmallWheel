@@ -1,4 +1,6 @@
+#include <swpch.h>
 #include "Application.hpp"
+
 #include "SDL.h"
 #include "SDL_error.h"
 #include "SDL_video.h"
@@ -6,11 +8,6 @@
 #include "Windowing/OpenGLWindow.hpp"
 #include "glad/gl.h"
 #include "Event.hpp"
-
-#include <iostream>
-#include <cassert>
-#include <memory>
-#include <vector>
 
 namespace swheel {
 
@@ -34,8 +31,6 @@ namespace swheel {
     }
 
     void Application::CreateWindow(const std::string& title, int width, int height) {
-        // Maybe make it so you can create multiple windows?
-        // assert(!m_window);
         m_windows.push_back(std::make_unique<OpenGLWindow>(title, width, height));
 
         if (!m_gladInitialized) {
@@ -45,12 +40,12 @@ namespace swheel {
 
     void Application::Run() {
         Event event;
-        while (m_windows.size() > 0) {
-            while(SDL_PollEvent(&event)) {
+        do {
+            while(event.PollNextEvent()) {
                 auto window = m_windows.begin();
                 do {
                     window->get()->OnEvent(event);
-                } while (++window != m_windows.end() && !event.m_handled);
+                } while (!event.m_handled && ++window != m_windows.end());
             }
             auto window = m_windows.begin();
             do {
@@ -60,7 +55,7 @@ namespace swheel {
                     ++window;
                 }
             } while (window != m_windows.end());
-        }
+        } while (m_windows.size() > 0);
     }
 
     void Application::InitGlad() {
@@ -70,6 +65,7 @@ namespace swheel {
             std::cerr << "Failed to initialize OpenGL context :(\n";
             exit(1);
         }
+        m_gladInitialized = true;
         std::cout << "OpenGL Info:\n";
         std::cout << " Vendor: " << glGetString(GL_VENDOR) << '\n';
         std::cout << " Renderer: " << glGetString(GL_RENDERER) << '\n';

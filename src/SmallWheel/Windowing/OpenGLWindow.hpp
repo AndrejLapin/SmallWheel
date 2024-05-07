@@ -3,8 +3,6 @@
 #include "Window.hpp"
 #include "SDL_video.h"
 
-#include <string>
-
 namespace swheel {
     class OpenGLWindow : public Window {
     public:

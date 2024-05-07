@@ -1,16 +1,15 @@
 #pragma once
 
-#include <memory>
-#include <string>
-#include <vector>
-
 namespace swheel {
     class Window;
 
+    // SDL based application
     class Application {
     public:
         Application();
         virtual ~Application();
+
+        // This needs to return something like window ID so the user can manage it
         void CreateWindow(const std::string& title, int width, int height);
 
         void Run();

@@ -7,9 +7,9 @@ namespace swheel {
     public:
         Event() = default;
 
-        SDL_Event* operator&() {
+        int PollNextEvent() {
             m_handled = false;
-            return &m_event;
+            return SDL_PollEvent(&m_event);
         }
 
         bool m_handled = false;

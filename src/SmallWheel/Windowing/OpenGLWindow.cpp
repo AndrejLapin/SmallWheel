@@ -1,10 +1,9 @@
+#include "swpch.h"
 #include "OpenGLWindow.hpp"
 
 #include "SDL.h"
 #include "SDL_video.h"
 #include "SmallWheel/Event.hpp"
-
-#include <iostream>
 
 namespace swheel {
     OpenGLWindow::OpenGLWindow(const std::string& title, int width, int height):
@@ -21,6 +20,9 @@ namespace swheel {
 
     // Need to just register events and then dispatch them
     // This is too verbous
+
+    // Do I want a map??
+    // If we have a map, how do we ensure ordered event propagation?
     void OpenGLWindow::OnEvent(Event& event) {
         switch (event.m_event.type) {
         case SDL_WINDOWEVENT: {
