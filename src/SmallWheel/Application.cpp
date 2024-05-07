@@ -1,4 +1,4 @@
-#include <swpch.h>
+#include <swpch.hpp>
 #include "Application.hpp"
 
 #include "SDL.h"
@@ -30,12 +30,15 @@ namespace swheel {
         SDL_Quit();
     }
 
-    void Application::CreateWindow(const std::string& title, int width, int height) {
-        m_windows.push_back(std::make_unique<OpenGLWindow>(title, width, height));
+    ApplicationWindow Application::CreateWindow(const std::string& title, int width, int height) {
+        auto newWindow = std::make_unique<OpenGLWindow>(title, width, height);
+        ApplicationWindow returnWindow = newWindow.get();
+        m_windows.emplace_back(std::move(newWindow));
 
         if (!m_gladInitialized) {
             InitGlad();
         }
+        return returnWindow;
     }
 
     void Application::Run() {

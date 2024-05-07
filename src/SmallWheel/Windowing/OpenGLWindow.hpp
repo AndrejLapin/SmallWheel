@@ -2,6 +2,7 @@
 
 #include "Window.hpp"
 #include "SDL_video.h"
+#include "SmallWheel/Layering/LayerStack.hpp"
 
 namespace swheel {
     class OpenGLWindow : public Window {
@@ -16,9 +17,11 @@ namespace swheel {
         bool Init();
 
     private:
-        bool m_closed = false;
+        LayerStack m_layerStack;
 
         SDL_Window* m_window = nullptr;
         SDL_GLContext m_context = nullptr;
+
+        bool m_closed = false;
     };
 }

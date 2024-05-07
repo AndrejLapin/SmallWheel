@@ -1,4 +1,4 @@
-#include "swpch.h"
+#include "swpch.hpp"
 #include "OpenGLWindow.hpp"
 
 #include "SDL.h"

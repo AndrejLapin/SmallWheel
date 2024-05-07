@@ -1,6 +1,7 @@
 #pragma once
 
 namespace swheel {
+    using ApplicationWindow = void*;
     class Window;
 
     // SDL based application
@@ -10,7 +11,7 @@ namespace swheel {
         virtual ~Application();
 
         // This needs to return something like window ID so the user can manage it
-        void CreateWindow(const std::string& title, int width, int height);
+        ApplicationWindow CreateWindow(const std::string& title, int width, int height);
 
         void Run();
 

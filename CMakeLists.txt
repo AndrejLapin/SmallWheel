@@ -12,7 +12,7 @@ set(PROJECT_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 add_library(SmallWheel STATIC ${PROJECT_SOURCE})
 target_include_directories(SmallWheel PRIVATE ${PROJECT_INCLUDES})
-target_precompile_headers(SmallWheel PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/swpch.h)
+target_precompile_headers(SmallWheel PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/swpch.hpp)
 
 set(SDL_TEST FALSE)
 set(SDL_SHARED FALSE)
