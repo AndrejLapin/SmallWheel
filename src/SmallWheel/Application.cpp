@@ -11,7 +11,7 @@
 
 namespace swheel {
 
-    Application::Application() {
+    Application::Application(const std::string& title, int width, int height) {
         if (SDL_Init(SDL_INIT_VIDEO) != 0) {
             std::cerr << "Failed to initialize SDL.\n";
         } else {
@@ -24,41 +24,27 @@ namespace swheel {
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+
+        CreateWindow(title, width, height);
+
+        InitGlad();
     }
 
     Application::~Application() {
         SDL_Quit();
     }
 
-    ApplicationWindow Application::CreateWindow(const std::string& title, int width, int height) {
-        auto newWindow = std::make_unique<OpenGLWindow>(title, width, height);
-        ApplicationWindow returnWindow = newWindow.get();
-        m_windows.emplace_back(std::move(newWindow));
-
-        if (!m_gladInitialized) {
-            InitGlad();
-        }
-        return returnWindow;
+    void Application::CreateWindow(const std::string& title, int width, int height) {
+        m_window = std::make_unique<OpenGLWindow>(title, width, height);
     }
 
     void Application::Run() {
         Event event;
         do {
             while(event.PollNextEvent()) {
-                auto window = m_windows.begin();
-                do {
-                    window->get()->OnEvent(event);
-                } while (!event.m_handled && ++window != m_windows.end());
+                m_window->OnEvent(event);
             }
-            auto window = m_windows.begin();
-            do {
-                if (window->get()->IsClosed()) {
-                    m_windows.erase(window);
-                } else {
-                    ++window;
-                }
-            } while (window != m_windows.end());
-        } while (m_windows.size() > 0);
+        } while (!m_window->IsClosed());
     }
 
     void Application::InitGlad() {
@@ -68,7 +54,6 @@ namespace swheel {
             std::cerr << "Failed to initialize OpenGL context :(\n";
             exit(1);
         }
-        m_gladInitialized = true;
         std::cout << "OpenGL Info:\n";
         std::cout << " Vendor: " << glGetString(GL_VENDOR) << '\n';
         std::cout << " Renderer: " << glGetString(GL_RENDERER) << '\n';
