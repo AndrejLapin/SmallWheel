@@ -39,6 +39,15 @@ namespace swheel {
             break;
         }
         }
+
+        if (!event.m_handled) {
+            for (auto it = m_layerStack.end(); it != m_layerStack.begin();) {
+                (*--it)->OnEvent(event);
+                if (event.m_handled) {
+                    break;
+                }
+            }
+        }
     }
 
     bool OpenGLWindow::Init() {
@@ -63,5 +72,13 @@ namespace swheel {
         }
 
         return true;
+    }
+
+    void OpenGLWindow::PushLayer(std::unique_ptr<Layer> layer) {
+        m_layerStack.PushLayer(std::move(layer))
+    }
+
+    void OpenGLWindow::PushOverlay(std::unique_ptr<Layer> layer) {
+        m_layerStack.PushOverlay(std::move(layer))
     }
 }

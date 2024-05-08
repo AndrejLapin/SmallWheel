@@ -13,6 +13,9 @@ namespace swheel {
         void OnEvent(Event& event) override;
         bool IsClosed() const override { return m_closed; }
 
+        void PushLayer(std::unique_ptr<Layer> layer);
+        void PushOverlay(std::unique_ptr<Layer> layer);
+
     private:
         bool Init();
 

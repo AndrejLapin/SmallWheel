@@ -1,3 +1,4 @@
+#include <iostream>
 #include <swpch.hpp>
 #include "Application.hpp"
 
@@ -34,6 +35,13 @@ namespace swheel {
         SDL_Quit();
     }
 
+    // Doesn't need to be tied to the application
+    void Application::PrintSDLErrors() {
+        while (auto error = SDL_GetError()) {
+            std::cerr << error << '\n';
+        }
+    }
+
     void Application::CreateWindow(const std::string& title, int width, int height) {
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
     }
@@ -50,7 +58,7 @@ namespace swheel {
     void Application::InitGlad() {
         int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
         if (version == 0) {
-            std::cerr << "SDL error: " << SDL_GetError() << "\n";
+            PrintSDLErrors();
             std::cerr << "Failed to initialize OpenGL context :(\n";
             exit(1);
         }

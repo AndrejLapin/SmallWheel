@@ -12,6 +12,8 @@ namespace swheel {
         void Run();
 
     private:
+        void PrintSDLErrors();
+
         void CreateWindow(const std::string& title, int width, int height);
         void InitGlad();
 
