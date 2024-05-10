@@ -75,10 +75,10 @@ namespace swheel {
     }
 
     void OpenGLWindow::PushLayer(std::unique_ptr<Layer> layer) {
-        m_layerStack.PushLayer(std::move(layer))
+        m_layerStack.PushLayer(std::move(layer));
     }
 
     void OpenGLWindow::PushOverlay(std::unique_ptr<Layer> layer) {
-        m_layerStack.PushOverlay(std::move(layer))
+        m_layerStack.PushOverlay(std::move(layer));
     }
 }

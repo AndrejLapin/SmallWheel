@@ -26,9 +26,59 @@ namespace swheel {
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
-        CreateWindow(title, width, height);
+        m_window = std::make_unique<OpenGLWindow>(title, width, height);
 
         InitGlad();
+
+        glGenVertexArrays(1, &m_vertexArray);
+        glBindVertexArray(m_vertexArray);
+
+        glGenBuffers(1, &m_vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+
+        float verticies[3 * 3] = {
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            0.0f,  0.5f, 0.0f
+        };
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+        glGenBuffers(1, &m_indexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+
+        unsigned int indecies[3] = { 0, 1, 2 };
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indecies), verticies, GL_STATIC_DRAW);
+
+        std::string vertexSrc = R"(
+            #version 460 core
+
+            layout(location = 0) in vec3 a_Position;
+
+            out vec3 v_Position;
+
+            void main() {
+                v_Position = a_Position + 0.5;
+                gl_Position = vec4(a_Position, 1.0);
+            }
+        )";
+
+        std::string fragmentSrc = R"(
+            #version 460 core
+
+            layout(lcoation = 0) out vec4 o_Color;
+
+            in vec3 v_Position;
+
+            void main() {
+                o_Color = vec4(v_Position * 0.5 + 0.5, 1.0);
+            }
+        )";
+
+        // m_sha
     }
 
     Application::~Application() {
@@ -40,10 +90,6 @@ namespace swheel {
         while (auto error = SDL_GetError()) {
             std::cerr << error << '\n';
         }
-    }
-
-    void Application::CreateWindow(const std::string& title, int width, int height) {
-        m_window = std::make_unique<OpenGLWindow>(title, width, height);
     }
 
     void Application::Run() {

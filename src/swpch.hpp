@@ -1,7 +1,8 @@
 #pragma once
 
+#include <cassert>
 #include <iostream>
 #include <memory>
-#include <vector>
 #include <string>
-#include <cassert>
+#include <variant>
+#include <vector>

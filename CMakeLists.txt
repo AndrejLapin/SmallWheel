@@ -23,6 +23,10 @@ target_link_libraries(SmallWheel SDL2-static)
 add_subdirectory(GLAD)
 target_link_libraries(SmallWheel GLAD)
 
+if((DEFINED SW_DEBUG_MODE) AND (${SW_DEBUG_MODE}))
+    add_compile_definitions(SW_DEBUG)
+endif()
+
 # if(WIN32)
 #     add_compile_definitions(SW_PLATFORM_WINDOWS)
 # endif()

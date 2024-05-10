@@ -13,12 +13,12 @@ namespace swheel {
 
     private:
         void PrintSDLErrors();
-
-        void CreateWindow(const std::string& title, int width, int height);
         void InitGlad();
 
     private:
         std::unique_ptr<Window> m_window;
+
+        unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
     };
 
     // To be defined in a Client
