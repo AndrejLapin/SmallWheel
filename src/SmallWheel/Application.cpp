@@ -16,11 +16,6 @@
 namespace swheel {
 
     Application::Application(const std::string& title, int width, int height) {
-        if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-            std::cerr << "Failed to initialize SDL.\n";
-        } else {
-            std::cout << "SDL initialised.\n";
-        }
         // TODO: move to renderer
         SDL_GL_LoadLibrary(nullptr);
         std::cout << "SDL application created\n";
@@ -83,7 +78,6 @@ namespace swheel {
     }
 
     Application::~Application() {
-        SDL_Quit();
     }
 
     // Doesn't need to be tied to the application

@@ -1,8 +1,9 @@
 #pragma once
 
+#include "SDLLifeTime.hpp"
 #include "SmallWheel/Renderer/Buffer.hpp"
 #include "SmallWheel/Renderer/Renderer.hpp"
-#include <memory>
+
 namespace swheel {
     class Window;
     class Shader;
@@ -20,11 +21,12 @@ namespace swheel {
         void InitGlad();
 
     private:
+        SDLLifetime sdlLifetime;
+        std::unique_ptr<Window> m_window;
         std::unique_ptr<Renderer> m_renderer;
         std::unique_ptr<Shader> m_shader;
         std::unique_ptr<IndexBuffer> m_indexBuffer;
         std::unique_ptr<VertexBuffer> m_vertexBuffer;
-        std::unique_ptr<Window> m_window;
 
         unsigned int m_vertexArray;//, m_indexBuffer;
     };
