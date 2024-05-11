@@ -1,4 +1,4 @@
-#include <swpch.hpp>
+#include "swpch.hpp"
 #include "Application.hpp"
 
 #include "Renderer/Shader.hpp"
@@ -11,6 +11,8 @@
 #include "glad/gl.h"
 #include "Event.hpp"
 
+#include "Platform/OpenGL/OpenGLRenderer.hpp"
+
 namespace swheel {
 
     Application::Application(const std::string& title, int width, int height) {
@@ -19,6 +21,7 @@ namespace swheel {
         } else {
             std::cout << "SDL initialised.\n";
         }
+        // TODO: move to renderer
         SDL_GL_LoadLibrary(nullptr);
         std::cout << "SDL application created\n";
 
@@ -31,13 +34,11 @@ namespace swheel {
 
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
 
+        // TODO: move to renderer, to init function or something
         InitGlad();
 
-        glGenVertexArrays(1, &m_vertexArray);
-        glBindVertexArray(m_vertexArray);
-
-        glGenBuffers(1, &m_vertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+        GLCall(glGenVertexArrays(1, &m_vertexArray));
+        GLCall(glBindVertexArray(m_vertexArray));
 
         float verticies[3 * 3] = {
             -0.5f, -0.5f, 0.0f,
@@ -45,16 +46,13 @@ namespace swheel {
             0.0f,  0.5f, 0.0f
         };
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
+        m_vertexBuffer = m_renderer->CreateVertexBuffer(verticies, sizeof(verticies));
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-
-        glGenBuffers(1, &m_indexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+        GLCall(glEnableVertexAttribArray(0));
+        GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
 
         unsigned int indecies[3] = { 0, 1, 2 };
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indecies), verticies, GL_STATIC_DRAW);
+        m_indexBuffer = m_renderer->CreateIndexBuffer(indecies, sizeof(indecies));
 
         std::string vertexSrc = R"(
             #version 460 core
@@ -98,12 +96,11 @@ namespace swheel {
     void Application::Run() {
         Event event;
         do {
-            glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            m_renderer->Clear();
 
-            glBindVertexArray(m_vertexArray);
+            GLCall(glBindVertexArray(m_vertexArray));
             m_shader->Bind();
-            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+            GLCall(glDrawElements(GL_TRIANGLES, m_indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr));
 
             while(event.PollNextEvent()) {
                 m_window->OnEvent(event);

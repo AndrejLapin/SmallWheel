@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SmallWheel/Renderer/Buffer.hpp"
 #include "SmallWheel/Renderer/Renderer.hpp"
 #include <memory>
 namespace swheel {
@@ -21,9 +22,11 @@ namespace swheel {
     private:
         std::unique_ptr<Renderer> m_renderer;
         std::unique_ptr<Shader> m_shader;
+        std::unique_ptr<IndexBuffer> m_indexBuffer;
+        std::unique_ptr<VertexBuffer> m_vertexBuffer;
         std::unique_ptr<Window> m_window;
 
-        unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
+        unsigned int m_vertexArray;//, m_indexBuffer;
     };
 
     // To be defined in a Client

@@ -14,7 +14,7 @@ namespace swheel {
         virtual ~Renderer() {}
 
         virtual void Clear() const = 0;
-        // void Draw(const )
+        virtual void Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const = 0;
 
         static std::unique_ptr<Renderer> CreateRenderer(RendererAPI type);
 

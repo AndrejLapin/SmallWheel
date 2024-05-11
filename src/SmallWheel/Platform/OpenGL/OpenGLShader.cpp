@@ -1,3 +1,4 @@
+#include "OpenGLRenderer.hpp"
 #include "SmallWheel/Renderer/Shader.hpp"
 #include "swpch.hpp"
 #include "OpenGLShader.hpp"
@@ -15,9 +16,9 @@ namespace swheel {
 
             if (!vertexShaderResult.isValid() || !fragmentShaderResult.isValid()) {
                 if (vertexShaderResult.isValid()) {
-                    glDeleteShader(vertexShaderResult.getResult());
+                    GLCall(glDeleteShader(vertexShaderResult.getResult()));
                 } else if (fragmentShaderResult.isValid()) {
-                    glDeleteShader(fragmentShaderResult.getResult());
+                    GLCall(glDeleteShader(fragmentShaderResult.getResult()));
                 }
                 return;
             }
@@ -29,35 +30,35 @@ namespace swheel {
 
         ShaderError error = LinkShaders({vertexShader, fragmentShader});
         if (error != ShaderError::NONE) {
-            glDeleteProgram(m_rendererId);
-            glDeleteProgram(vertexShader);
-            glDeleteProgram(fragmentShader);
+            GLCall(glDeleteProgram(m_rendererId));
+            GLCall(glDeleteProgram(vertexShader));
+            GLCall(glDeleteProgram(fragmentShader));
         }
 
         // Always detach shaders after a successful link.
-        glDetachShader(m_rendererId, vertexShader);
-        glDetachShader(m_rendererId, fragmentShader);
+        GLCall(glDetachShader(m_rendererId, vertexShader));
+        GLCall(glDetachShader(m_rendererId, fragmentShader));
     }
 
     OpenGLShader::~OpenGLShader() {
-        glDeleteProgram(m_rendererId);
+        GLCall(glDeleteProgram(m_rendererId));
     }
 
     Shader::ShaderError OpenGLShader::LinkShaders(const std::vector<GLuint>& shaders) {
         for (auto shader : shaders) {
-            glAttachShader(m_rendererId, shader);
+            GLCall(glAttachShader(m_rendererId, shader));
         }
-        glLinkProgram(m_rendererId);
+        GLCall(glLinkProgram(m_rendererId));
 
         GLint isLinked = 0;
-        glGetProgramiv(m_rendererId, GL_LINK_STATUS, (int*)&isLinked);
+        GLCall(glGetProgramiv(m_rendererId, GL_LINK_STATUS, (int*)&isLinked));
         if (isLinked == GL_FALSE) {
             GLint maxLength = 0;
-            glGetProgramiv(m_rendererId, GL_INFO_LOG_LENGTH, &maxLength);
+            GLCall(glGetProgramiv(m_rendererId, GL_INFO_LOG_LENGTH, &maxLength));
 
             if (maxLength > 0 ) {
                 auto infoLog = std::make_unique<GLchar[]>(maxLength);
-                glGetProgramInfoLog(m_rendererId, maxLength, &maxLength, &infoLog[0]);
+                GLCall(glGetProgramInfoLog(m_rendererId, maxLength, &maxLength, &infoLog[0]));
 
                 std::cerr << "Shader link failure: " << infoLog.get() << '\n';
             } else {
@@ -70,24 +71,24 @@ namespace swheel {
     }
 
     Result<GLuint, Shader::ShaderError> OpenGLShader::CompileShader(const std::string& shaderSource, GLenum type) {
-        GLuint shader = glCreateShader(type);
+        GLCall(GLuint shader = glCreateShader(type));
 
         const GLchar* source = shaderSource.c_str();
-        glShaderSource(shader, 1, &source, 0);
+        GLCall(glShaderSource(shader, 1, &source, 0));
 
-        glCompileShader(shader);
+        GLCall(glCompileShader(shader));
 
         GLint isCompiled = 0;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+        GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled));
         if (isCompiled == GL_FALSE) {
             GLint maxLength = 0;
-            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+            GLCall(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength));
 
             if (maxLength > 0) {
                 auto infoLog = std::make_unique<GLchar[]>(maxLength);
-                glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+                GLCall(glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]));
 
-                glDeleteShader(shader);
+                GLCall(glDeleteShader(shader));
 
                 std::cerr << "Shader compliation failure: " << infoLog.get() << '\n';
             } else {
@@ -101,10 +102,10 @@ namespace swheel {
     }
 
     void OpenGLShader::Bind() const {
-        glUseProgram(m_rendererId);
+        GLCall(glUseProgram(m_rendererId));
     }
 
     void OpenGLShader::Unbind() const {
-        glUseProgram(m_rendererId);
+        GLCall(glUseProgram(m_rendererId));
     }
 }

@@ -4,13 +4,32 @@
 #include "glad/gl.h"
 
 namespace swheel {
+    void GLClearError() {
+        while (glGetError() != GL_NO_ERROR);
+    }
+
+    bool GLLogCall(const char* function, const char* file, int line) {
+        while (GLenum error = glGetError()) {
+            std::cerr << "OpenGL Error: (" << error << ')' << function << ' ' << file << ':' << line << '\n';
+            return false;
+        }
+        return true;
+    }
+
     void OpenGLRenderer::Clear() const {
         // Add GL error handling
-        glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        GLCall(glClearColor(0.2f, 0.3f, 0.5f, 1.0f));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
     }
 
     OpenGLRenderer::OpenGLRenderer(): Renderer(RendererAPI::OpenGL) {}
 
     OpenGLRenderer::~OpenGLRenderer() {}
+
+    void OpenGLRenderer::Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const {
+        shader.Bind();
+        va.Bind();
+        ib.Bind();
+        GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+    }
 }
