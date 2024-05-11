@@ -1,11 +1,12 @@
+#include "SmallWheel/Renderer/Shader.hpp"
 #include "swpch.hpp"
-#include "Shader.hpp"
+#include "OpenGLShader.hpp"
 
 #include "SmallWheel/Core.hpp"
 #include "SmallWheel/Utils/Result.hpp"
 
 namespace swheel {
-    Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc) {
+    OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
         GLuint vertexShader;
         GLuint fragmentShader;
         {
@@ -38,11 +39,11 @@ namespace swheel {
         glDetachShader(m_rendererId, fragmentShader);
     }
 
-    Shader::~Shader() {
+    OpenGLShader::~OpenGLShader() {
         glDeleteProgram(m_rendererId);
     }
 
-    Shader::ShaderError Shader::LinkShaders(const std::vector<GLuint>& shaders) {
+    Shader::ShaderError OpenGLShader::LinkShaders(const std::vector<GLuint>& shaders) {
         for (auto shader : shaders) {
             glAttachShader(m_rendererId, shader);
         }
@@ -68,7 +69,7 @@ namespace swheel {
         return ShaderError::NONE;
     }
 
-    Result<GLuint, Shader::ShaderError> Shader::CompileShader(const std::string& shaderSource, GLenum type) {
+    Result<GLuint, Shader::ShaderError> OpenGLShader::CompileShader(const std::string& shaderSource, GLenum type) {
         GLuint shader = glCreateShader(type);
 
         const GLchar* source = shaderSource.c_str();
@@ -99,11 +100,11 @@ namespace swheel {
         return Result<GLuint, ShaderError>::valid(shader);
     }
 
-    void Shader::Bind() const {
+    void OpenGLShader::Bind() const {
         glUseProgram(m_rendererId);
     }
 
-    void Shader::Unbind() const {
+    void OpenGLShader::Unbind() const {
         glUseProgram(m_rendererId);
     }
 }

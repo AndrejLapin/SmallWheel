@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Window.hpp"
 #include "SDL_video.h"
+#include "SmallWheel/Window.hpp"
 #include "SmallWheel/Layering/LayerStack.hpp"
 
 namespace swheel {

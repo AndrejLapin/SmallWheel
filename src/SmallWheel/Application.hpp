@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SmallWheel/Renderer/Renderer.hpp"
+#include <memory>
 namespace swheel {
     class Window;
     class Shader;
@@ -17,6 +19,7 @@ namespace swheel {
         void InitGlad();
 
     private:
+        std::unique_ptr<Renderer> m_renderer;
         std::unique_ptr<Shader> m_shader;
         std::unique_ptr<Window> m_window;
 

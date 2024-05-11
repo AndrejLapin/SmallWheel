@@ -1,5 +1,7 @@
 #pragma once
 
+#define GlCall(x)
+
 #ifdef SW_DEBUG
     #define SW_ENABLE_ERROR_LOGS
     #define SW_ENABLE_ASSERTS

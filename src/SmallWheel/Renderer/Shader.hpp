@@ -1,8 +1,5 @@
 #pragma once
 
-#include "glad/gl.h"
-#include "SmallWheel/Utils/Result.hpp"
-
 namespace swheel {
     class Shader {
     public:
@@ -12,18 +9,9 @@ namespace swheel {
             LINKING_FAILED
         };
 
-        Shader(const std::string& vetexSrc, const std::string& fragmentSrc);
-        ~Shader();
+        virtual ~Shader() {}
 
-        void Bind() const;
-        void Unbind() const;
-
-    private:
-        ShaderError LinkShaders(const std::vector<GLuint>& shaders);
-        Result<GLuint, ShaderError> CompileShader(const std::string& shaderSource, GLenum type);
-
-
-    private:
-        uint32_t m_rendererId;
+        virtual void Bind() const = 0;
+        virtual void Unbind() const = 0;
     };
 }

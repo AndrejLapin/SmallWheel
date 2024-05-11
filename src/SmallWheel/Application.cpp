@@ -5,8 +5,9 @@
 #include "SDL.h"
 #include "SDL_error.h"
 #include "SDL_video.h"
-#include "Windowing/Window.hpp"
-#include "Windowing/OpenGLWindow.hpp"
+#include "SmallWheel/Renderer/Renderer.hpp"
+#include "Window.hpp"
+#include "Platform/OpenGL/OpenGLWindow.hpp"
 #include "glad/gl.h"
 #include "Event.hpp"
 
@@ -20,6 +21,8 @@ namespace swheel {
         }
         SDL_GL_LoadLibrary(nullptr);
         std::cout << "SDL application created\n";
+
+        m_renderer = Renderer::CreateRenderer(RendererAPI::OpenGL);
 
         // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -78,7 +81,7 @@ namespace swheel {
             }
         )";
 
-        m_shader = std::make_unique<Shader>(vertexSrc, fragmentSrc);
+        m_shader = m_renderer->CreateShader(vertexSrc, fragmentSrc);
     }
 
     Application::~Application() {
