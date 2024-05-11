@@ -1,15 +1,12 @@
 #include "swpch.hpp"
 #include "Application.hpp"
-
-#include "Renderer/Shader.hpp"
-#include "SDL.h"
-#include "SDL_error.h"
-#include "SDL_video.h"
-#include "SmallWheel/Renderer/Renderer.hpp"
-#include "Window.hpp"
-#include "Platform/OpenGL/OpenGLWindow.hpp"
 #include "glad/gl.h"
+
 #include "Event.hpp"
+#include "Platform/OpenGL/OpenGLWindow.hpp"
+#include "Renderer/Shader.hpp"
+#include "Renderer/Shader.hpp"
+#include "Window.hpp"
 
 #include "Platform/OpenGL/OpenGLRenderer.hpp"
 
