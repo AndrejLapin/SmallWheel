@@ -11,6 +11,7 @@ namespace swheel {
         ~OpenGLWindow() override;
 
         void OnEvent(Event& event) override;
+        void OnUpdate() override;
         bool IsClosed() const override { return m_closed; }
 
         void PushLayer(std::unique_ptr<Layer> layer);

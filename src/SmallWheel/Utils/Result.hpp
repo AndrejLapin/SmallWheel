@@ -19,12 +19,12 @@ namespace swheel {
         }
 
         const T& getResult() const {
-            SW_ASSERT(std::holds_alternative<T>(m_data), "Does not contain result type!");
+            SW_ASSERT(std::holds_alternative<T>(m_data));
             return std::get<T>(m_data);
         }
 
         const E& getError() const {
-            SW_ASSERT(std::holds_alternative<E>(m_data), "Does not contain error type!");
+            SW_ASSERT(std::holds_alternative<E>(m_data));
             return std::get<E>(m_data);
         }
 

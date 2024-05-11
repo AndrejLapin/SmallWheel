@@ -1,13 +1,8 @@
-#include "SmallWheel/Core.hpp"
-#include "SmallWheel/Utils/Result.hpp"
 #include "swpch.hpp"
 #include "Shader.hpp"
 
-#include <array>
-#include <cassert>
-#include <cstdint>
-#include <variant>
-#include <vector>
+#include "SmallWheel/Core.hpp"
+#include "SmallWheel/Utils/Result.hpp"
 
 namespace swheel {
     Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc) {
@@ -31,8 +26,8 @@ namespace swheel {
 
         m_rendererId = glCreateProgram();
 
-        uint32_t results = (uint32_t)LinkShader(vertexShader) | (uint32_t)LinkShader(fragmentShader);
-        if (results) {
+        ShaderError error = LinkShaders({vertexShader, fragmentShader});
+        if (error != ShaderError::NONE) {
             glDeleteProgram(m_rendererId);
             glDeleteProgram(vertexShader);
             glDeleteProgram(fragmentShader);
@@ -43,8 +38,15 @@ namespace swheel {
         glDetachShader(m_rendererId, fragmentShader);
     }
 
-    Shader::ShaderError Shader::LinkShader(GLuint shader) {
-        glAttachShader(m_rendererId, shader);
+    Shader::~Shader() {
+        glDeleteProgram(m_rendererId);
+    }
+
+    Shader::ShaderError Shader::LinkShaders(const std::vector<GLuint>& shaders) {
+        for (auto shader : shaders) {
+            glAttachShader(m_rendererId, shader);
+        }
+        glLinkProgram(m_rendererId);
 
         GLint isLinked = 0;
         glGetProgramiv(m_rendererId, GL_LINK_STATUS, (int*)&isLinked);
@@ -52,13 +54,15 @@ namespace swheel {
             GLint maxLength = 0;
             glGetProgramiv(m_rendererId, GL_INFO_LOG_LENGTH, &maxLength);
 
-            // Don't really need this to be an std::vector, just an array allocated at runtime
-            // and then deleted when the scope is exited
-            std::vector<GLchar> infoLog(maxLength);
-            glGetProgramInfoLog(m_rendererId, maxLength, &maxLength, &infoLog[0]);
+            if (maxLength > 0 ) {
+                auto infoLog = std::make_unique<GLchar[]>(maxLength);
+                glGetProgramInfoLog(m_rendererId, maxLength, &maxLength, &infoLog[0]);
 
-            std::cerr << "Shader link failure: " << infoLog.data() << '\n';
-            assert(false);
+                std::cerr << "Shader link failure: " << infoLog.get() << '\n';
+            } else {
+                std::cerr << "Unknown shader link failure!\n";
+            }
+            SW_ASSERT(false);
             return ShaderError::LINKING_FAILED;
         }
         return ShaderError::NONE;
@@ -78,17 +82,28 @@ namespace swheel {
             GLint maxLength = 0;
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
-            // Don't really need this to be an std::vector, just an array allocated at runtime
-            // and then deleted when the scope is exited
-            std::vector<GLchar> infoLog(maxLength);
-            glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+            if (maxLength > 0) {
+                auto infoLog = std::make_unique<GLchar[]>(maxLength);
+                glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
 
-            glDeleteShader(shader);
+                glDeleteShader(shader);
 
-            std::cerr << "Shader compliation failure: " << infoLog.data() << '\n';
-            assert(false);
+                std::cerr << "Shader compliation failure: " << infoLog.get() << '\n';
+            } else {
+                std::cerr << "Unknown shader link failure!\n";
+            }
+
+            SW_ASSERT(false);
             return Result<GLuint, ShaderError>::error(ShaderError::COMPILATION_FAILED);
         }
         return Result<GLuint, ShaderError>::valid(shader);
+    }
+
+    void Shader::Bind() const {
+        glUseProgram(m_rendererId);
+    }
+
+    void Shader::Unbind() const {
+        glUseProgram(m_rendererId);
     }
 }

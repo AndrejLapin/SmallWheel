@@ -19,7 +19,7 @@ namespace swheel {
         void Unbind() const;
 
     private:
-        ShaderError LinkShader(GLuint shader);
+        ShaderError LinkShaders(const std::vector<GLuint>& shaders);
         Result<GLuint, ShaderError> CompileShader(const std::string& shaderSource, GLenum type);
 
 

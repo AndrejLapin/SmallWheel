@@ -50,6 +50,10 @@ namespace swheel {
         }
     }
 
+    void OpenGLWindow::OnUpdate() {
+        SDL_GL_SwapWindow(m_window);
+    }
+
     bool OpenGLWindow::Init() {
         m_window = SDL_CreateWindow(
             m_title.c_str(),
@@ -70,6 +74,8 @@ namespace swheel {
             std::cerr << "OpenGL context not avalibale\n";
             return false;
         }
+
+        SDL_GL_MakeCurrent(m_window, m_context);
 
         return true;
     }

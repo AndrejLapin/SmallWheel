@@ -1,7 +1,7 @@
-#include <iostream>
 #include <swpch.hpp>
 #include "Application.hpp"
 
+#include "Renderer/Shader.hpp"
 #include "SDL.h"
 #include "SDL_error.h"
 #include "SDL_video.h"
@@ -69,7 +69,7 @@ namespace swheel {
         std::string fragmentSrc = R"(
             #version 460 core
 
-            layout(lcoation = 0) out vec4 o_Color;
+            layout(location = 0) out vec4 o_Color;
 
             in vec3 v_Position;
 
@@ -78,7 +78,7 @@ namespace swheel {
             }
         )";
 
-        // m_sha
+        m_shader = std::make_unique<Shader>(vertexSrc, fragmentSrc);
     }
 
     Application::~Application() {
@@ -95,9 +95,17 @@ namespace swheel {
     void Application::Run() {
         Event event;
         do {
+            glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            glBindVertexArray(m_vertexArray);
+            m_shader->Bind();
+            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+
             while(event.PollNextEvent()) {
                 m_window->OnEvent(event);
             }
+            m_window->OnUpdate();
         } while (!m_window->IsClosed());
     }
 

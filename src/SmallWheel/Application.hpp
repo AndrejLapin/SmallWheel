@@ -2,6 +2,7 @@
 
 namespace swheel {
     class Window;
+    class Shader;
 
     // SDL based application
     class Application {
@@ -16,6 +17,7 @@ namespace swheel {
         void InitGlad();
 
     private:
+        std::unique_ptr<Shader> m_shader;
         std::unique_ptr<Window> m_window;
 
         unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
