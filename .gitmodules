@@ -3,4 +3,4 @@
 	url = git@github.com:libsdl-org/SDL.git
 [submodule "imgui"]
 	path = imgui
-	url = git@github.com:ocornut/imgui.git
+	url = git@github.com:AndrejLapin/imgui.git
