@@ -27,7 +27,6 @@ namespace swheel {
         }
 
         m_rendererId = glCreateProgram();
-
         ShaderError error = LinkShaders({vertexShader, fragmentShader});
         if (error != ShaderError::NONE) {
             GLCall(glDeleteProgram(m_rendererId));
@@ -38,6 +37,8 @@ namespace swheel {
         // Always detach shaders after a successful link.
         GLCall(glDetachShader(m_rendererId, vertexShader));
         GLCall(glDetachShader(m_rendererId, fragmentShader));
+        GLCall(glDeleteShader(vertexShader));
+        GLCall(glDeleteShader(fragmentShader));
     }
 
     OpenGLShader::~OpenGLShader() {

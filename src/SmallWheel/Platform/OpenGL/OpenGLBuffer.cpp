@@ -26,7 +26,7 @@ namespace swheel {
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
         GLCall(glCreateBuffers(1, &m_rendererId));
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_rendererId));
-        GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+        GLCall(glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW));
     }
 
     OpenGLVertexBuffer::~OpenGLVertexBuffer() {

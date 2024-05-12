@@ -13,9 +13,9 @@
 namespace swheel {
 
     Application::Application(const std::string& title, int width, int height) {
-        // TODO: move to renderer
-        SDL_GL_LoadLibrary(nullptr);
-        std::cout << "SDL application created\n";
+        // TODO: move to renderer if we even need this
+        // SDL_GL_LoadLibrary(nullptr);
+        // std::cout << "SDL application created\n";
 
         m_renderer = Renderer::CreateRenderer(RendererAPI::OpenGL);
 
@@ -32,13 +32,13 @@ namespace swheel {
         GLCall(glGenVertexArrays(1, &m_vertexArray));
         GLCall(glBindVertexArray(m_vertexArray));
 
-        float verticies[3 * 3] = {
+        float vertices[3 * 3] = {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
             0.0f,  0.5f, 0.0f
         };
 
-        m_vertexBuffer = m_renderer->CreateVertexBuffer(verticies, sizeof(verticies));
+        m_vertexBuffer = m_renderer->CreateVertexBuffer(vertices, sizeof(vertices));
 
         GLCall(glEnableVertexAttribArray(0));
         GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
@@ -92,11 +92,11 @@ namespace swheel {
             GLCall(glBindVertexArray(m_vertexArray));
             m_shader->Bind();
             GLCall(glDrawElements(GL_TRIANGLES, m_indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr));
+            m_window->OnUpdate();
 
             while(event.PollNextEvent()) {
                 m_window->OnEvent(event);
             }
-            m_window->OnUpdate();
         } while (!m_window->IsClosed());
     }
 
