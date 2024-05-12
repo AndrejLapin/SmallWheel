@@ -3,9 +3,13 @@
 #include "SmallWheel/Core.hpp"
 #include "SmallWheel/Renderer/Renderer.hpp"
 
+#ifdef SW_ENABLE_GRAPHICS_DEBUG
 #define GLCall(x) GLClearError();\
     x;\
     SW_ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+#else
+#define GLCall(x) x
+#endif
 
 
 namespace swheel {

@@ -76,7 +76,6 @@ namespace swheel {
 
         const GLchar* source = shaderSource.c_str();
         GLCall(glShaderSource(shader, 1, &source, 0));
-
         GLCall(glCompileShader(shader));
 
         GLint isCompiled = 0;

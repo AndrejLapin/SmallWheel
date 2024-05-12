@@ -75,8 +75,6 @@ namespace swheel {
             return false;
         }
 
-        SDL_GL_MakeCurrent(m_window, m_context);
-
         return true;
     }
 

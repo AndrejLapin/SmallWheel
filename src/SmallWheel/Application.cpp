@@ -24,6 +24,8 @@ namespace swheel {
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
+        // One renderer per window makes a lot of sense
+        // Maybe move this to the renderer too?
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
 
         // TODO: move to renderer, to init function or something
@@ -67,7 +69,7 @@ namespace swheel {
             in vec3 v_Position;
 
             void main() {
-                o_Color = vec4(v_Position * 0.5 + 0.5, 1.0);
+                o_Color = vec4(v_Position, 1.0);
             }
         )";
 

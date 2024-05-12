@@ -5,6 +5,7 @@
 #ifdef SW_DEBUG
     #define SW_ENABLE_ERROR_LOGS
     #define SW_ENABLE_ASSERTS
+    #define SW_ENABLE_GRAPHICS_DEBUG
 #endif
 
 // TODO: implement later
