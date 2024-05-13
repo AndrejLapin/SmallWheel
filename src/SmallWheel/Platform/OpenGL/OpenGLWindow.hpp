@@ -1,9 +1,9 @@
 #pragma once
 
 #include "SDL_video.h"
+#include "SmallWheel/Layering/Layer.hpp"
 #include "SmallWheel/Window.hpp"
 #include "SmallWheel/Layering/LayerStack.hpp"
-
 namespace swheel {
     class OpenGLWindow : public Window {
     public:
@@ -14,9 +14,8 @@ namespace swheel {
         void OnUpdate() override;
         bool IsClosed() const override { return m_closed; }
 
-        void PushLayer(std::unique_ptr<Layer> layer);
-        void PushOverlay(std::unique_ptr<Layer> layer);
-
+        void PushLayer(std::unique_ptr<Layer>) override;
+        void PushOverlay(std::unique_ptr<Layer> layer) override;
     private:
         bool Init();
 

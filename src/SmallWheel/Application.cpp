@@ -9,6 +9,7 @@
 #include "Window.hpp"
 
 #include "Platform/OpenGL/OpenGLRenderer.hpp"
+#include "SmallWheel/Layering/ImguiLayer.hpp"
 
 namespace swheel {
 
@@ -27,9 +28,13 @@ namespace swheel {
         // One renderer per window makes a lot of sense
         // Maybe move this to the renderer too?
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
-
         // TODO: move to renderer, to init function or something
         InitGlad();
+
+        {
+            auto imguiLayer = std::make_unique<ImguiLayer>();
+            m_window->PushOverlay(std::move(imguiLayer));
+        }
 
         GLCall(glGenVertexArrays(1, &m_vertexArray));
         GLCall(glBindVertexArray(m_vertexArray));

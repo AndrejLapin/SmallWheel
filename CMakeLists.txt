@@ -23,6 +23,10 @@ target_link_libraries(SmallWheel SDL2-static)
 add_subdirectory(GLAD)
 target_link_libraries(SmallWheel GLAD)
 
+add_subdirectory(imgui)
+target_include_directories(SmallWheel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/imgui/)
+target_link_libraries(SmallWheel imgui)
+
 if((DEFINED SW_DEBUG_MODE) AND (${SW_DEBUG_MODE}))
     add_compile_definitions(SW_DEBUG)
 endif()

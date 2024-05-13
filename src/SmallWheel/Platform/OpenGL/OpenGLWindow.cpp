@@ -51,6 +51,11 @@ namespace swheel {
     }
 
     void OpenGLWindow::OnUpdate() {
+        for (auto& layer : m_layerStack) {
+            layer->OnUpdate();
+        }
+        // do stuff with imgui
+        // seperate imgui layer when pushing?
         SDL_GL_SwapWindow(m_window);
     }
 
@@ -79,10 +84,12 @@ namespace swheel {
     }
 
     void OpenGLWindow::PushLayer(std::unique_ptr<Layer> layer) {
+        layer->OnAttach();
         m_layerStack.PushLayer(std::move(layer));
     }
 
     void OpenGLWindow::PushOverlay(std::unique_ptr<Layer> layer) {
+        layer->OnAttach();
         m_layerStack.PushOverlay(std::move(layer));
     }
 }
