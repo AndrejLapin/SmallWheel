@@ -1,3 +1,4 @@
+#include "SmallWheel/Renderer/Renderer.hpp"
 #include "swpch.hpp"
 #include "Application.hpp"
 #include "glad/gl.h"
@@ -18,16 +19,14 @@ namespace swheel {
         // SDL_GL_LoadLibrary(nullptr);
         // std::cout << "SDL application created\n";
 
-        m_renderer = Renderer::CreateRenderer(RendererAPI::OpenGL);
-
         // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
         // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
-        // One renderer per window makes a lot of sense
-        // Maybe move this to the renderer too?
+        // Nicer way to create Window (same like it was with renderer)
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
+        Renderer& renderer = m_window->GetRenderer();
         // TODO: move to renderer, to init function or something
         InitGlad();
 
@@ -45,13 +44,13 @@ namespace swheel {
             0.0f,  0.5f, 0.0f
         };
 
-        m_vertexBuffer = m_renderer->CreateVertexBuffer(vertices, sizeof(vertices));
+        m_vertexBuffer = renderer.CreateVertexBuffer(vertices, sizeof(vertices));
 
         GLCall(glEnableVertexAttribArray(0));
         GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
 
         unsigned int indecies[3] = { 0, 1, 2 };
-        m_indexBuffer = m_renderer->CreateIndexBuffer(indecies, sizeof(indecies));
+        m_indexBuffer = renderer.CreateIndexBuffer(indecies, sizeof(indecies));
 
         std::string vertexSrc = R"(
             #version 460 core
@@ -78,7 +77,7 @@ namespace swheel {
             }
         )";
 
-        m_shader = m_renderer->CreateShader(vertexSrc, fragmentSrc);
+        m_shader = renderer.CreateShader(vertexSrc, fragmentSrc);
     }
 
     Application::~Application() {
@@ -93,8 +92,9 @@ namespace swheel {
 
     void Application::Run() {
         Event event;
+        Renderer& renderer = m_window->GetRenderer();
         do {
-            m_renderer->Clear();
+            renderer.Clear();
 
             GLCall(glBindVertexArray(m_vertexArray));
             m_shader->Bind();

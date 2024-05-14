@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Renderer/Renderer.hpp"
 #include "Layering/Layer.hpp"
 
 namespace swheel {
@@ -15,7 +16,10 @@ namespace swheel {
         virtual void PushLayer(std::unique_ptr<Layer> layer) = 0;
         virtual void PushOverlay(std::unique_ptr<Layer> layer) = 0;
 
+        virtual Renderer& GetRenderer() = 0;
+
     protected:
+        //maybe data should be moved to an actual class
         std::string m_title;
         int m_width;
         int m_height;

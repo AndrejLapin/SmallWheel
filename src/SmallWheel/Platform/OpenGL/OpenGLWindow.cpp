@@ -1,13 +1,17 @@
+#include "OpenGLRenderer.hpp"
+#include "SmallWheel/Renderer/Renderer.hpp"
 #include "swpch.hpp"
 #include "OpenGLWindow.hpp"
 
 #include "SDL.h"
 #include "SDL_video.h"
 #include "SmallWheel/Event.hpp"
+#include <memory>
 
 namespace swheel {
     OpenGLWindow::OpenGLWindow(const std::string& title, int width, int height):
     Window(title, width, height) {
+        m_renderer = std::make_unique<OpenGLRenderer>();
         if (!Init()) {
             m_closed = true;
         }

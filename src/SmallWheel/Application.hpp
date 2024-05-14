@@ -23,7 +23,6 @@ namespace swheel {
     private:
         SDLLifetime sdlLifetime;
         std::unique_ptr<Window> m_window;
-        std::unique_ptr<Renderer> m_renderer;
         std::unique_ptr<Shader> m_shader;
         std::unique_ptr<IndexBuffer> m_indexBuffer;
         std::unique_ptr<VertexBuffer> m_vertexBuffer;
