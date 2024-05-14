@@ -28,11 +28,12 @@ target_link_libraries(SmallWheel GLAD)
 # === imgui ===
 add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLAD)
 set(IMGUI_BACKEND_SDL TRUE)
+set(IMGUI_BACKEND_OPENGL3 TRUE)
 add_subdirectory(imgui)
 target_link_libraries(imgui PRIVATE SDL2-static)
 target_link_libraries(SmallWheel imgui)
 
-target_include_directories(SmallWheel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/imgui/)
+target_include_directories(SmallWheel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
 if((DEFINED SW_DEBUG_MODE) AND (${SW_DEBUG_MODE}))
     add_compile_definitions(SW_DEBUG)

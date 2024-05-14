@@ -1,12 +1,9 @@
-#include "SDL_stdinc.h"
 #include "swpch.hpp"
 #include "ImguiLayer.hpp"
 
-// #include "imgui"
-
 #include "SDL_timer.h"
 #include "imgui.h"
-#include "SmallWheel/Platform/OpenGL/OpenGLimguiRenderer.hpp"
+#include "imgui/backends/imgui_impl_opengl3.h"
 
 namespace swheel {
     ImguiLayer::ImguiLayer(): m_time(SDL_GetTicks()) {

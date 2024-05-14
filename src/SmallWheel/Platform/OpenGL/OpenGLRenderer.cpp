@@ -26,6 +26,7 @@ namespace swheel {
 
     OpenGLRenderer::~OpenGLRenderer() {}
 
+    //                    should be vertex array instead of a VertexBuffer
     void OpenGLRenderer::Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const {
         shader.Bind();
         va.Bind();
