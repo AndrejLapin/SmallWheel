@@ -2,6 +2,8 @@
 #include "swpch.hpp"
 #include "ImguiLayer.hpp"
 
+// #include "imgui"
+
 #include "SDL_timer.h"
 #include "imgui.h"
 #include "SmallWheel/Platform/OpenGL/OpenGLimguiRenderer.hpp"
@@ -16,12 +18,21 @@ namespace swheel {
     }
 
     void ImguiLayer::OnAttach() {
+        IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
 
         ImGuiIO& io = ImGui::GetIO();
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+        ImGuiStyle& style = ImGui::GetStyle();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            style.WindowRounding = 0.0f;
+            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        }
 
         ImGui_ImplOpenGL3_Init("#version 460");
     }
