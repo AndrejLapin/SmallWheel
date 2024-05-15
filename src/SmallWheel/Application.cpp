@@ -26,13 +26,14 @@ namespace swheel {
 
         // Nicer way to create Window (same like it was with renderer)
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
+
         Renderer& renderer = m_window->GetRenderer();
         // TODO: move to renderer, to init function or something
         InitGlad();
 
         {
-            auto imguiLayer = std::make_unique<ImguiLayer>();
-            m_window->PushOverlay(std::move(imguiLayer));
+            m_window->PushOverlay<ImguiLayer>("Imgui");
+            // m_window
         }
 
         GLCall(glGenVertexArrays(1, &m_vertexArray));

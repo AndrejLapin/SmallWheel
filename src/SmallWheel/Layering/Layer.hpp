@@ -1,11 +1,12 @@
 #pragma once
 
 #include "SmallWheel/Event.hpp"
+#include "SmallWheel/Window.hpp"
 
 namespace  swheel {
     class Layer {
     public:
-        Layer(const std::string& name = "Layer"): m_debugName(name) {}
+        Layer(Window& owner, const std::string& name = "Layer"): m_ownerWindow(owner), m_debugName(name) {}
         virtual ~Layer() {}
 
         virtual void OnAttach() {}
@@ -15,6 +16,7 @@ namespace  swheel {
 
         inline const std::string& GetDebugName() const { return m_debugName; }
     protected:
-        std::string m_debugName; 
+        Window& m_ownerWindow;
+        std::string m_debugName;
     };
 }

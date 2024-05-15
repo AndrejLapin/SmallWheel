@@ -10,7 +10,7 @@
 
 namespace swheel {
     OpenGLWindow::OpenGLWindow(const std::string& title, int width, int height):
-    Window(title, width, height) {
+    m_title(title), m_width(width), m_height(height) {
         m_renderer = std::make_unique<OpenGLRenderer>();
         if (!Init()) {
             m_closed = true;

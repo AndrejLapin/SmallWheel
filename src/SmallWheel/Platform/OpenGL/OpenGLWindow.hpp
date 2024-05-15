@@ -17,12 +17,20 @@ namespace swheel {
         bool IsClosed() const override { return m_closed; }
         Renderer& GetRenderer() override { return *m_renderer.get();}
 
-        void PushLayer(std::unique_ptr<Layer>) override;
-        void PushOverlay(std::unique_ptr<Layer> layer) override;
+        int GetWidth() const { return m_width; }
+        int GetHeight() const { return m_height; }
+        SDL_Window* GetSDLWindow() const { return m_window; }
+        SDL_GLContext GetSDLGLContext() const { return m_context; }
     private:
+        void PushLayer(std::unique_ptr<Layer> layer) override;
+        void PushOverlay(std::unique_ptr<Layer> overlay) override;
         bool Init();
 
     private:
+        std::string m_title;
+        int m_width;
+        int m_height;
+
         std::unique_ptr<OpenGLRenderer> m_renderer;
         LayerStack m_layerStack;
 
