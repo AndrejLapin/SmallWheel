@@ -9,8 +9,9 @@
 #include "imgui/backends/imgui_impl_opengl3.h"
 
 namespace swheel {
-    ImguiLayer::ImguiLayer(Window& owner, const std::string& name): Layer(owner, name) {
-
+    ImguiLayer::ImguiLayer(const Window& owner, const std::string& name): 
+        Layer(owner, name), 
+        m_ownerOpenGLWindow(*static_cast<const OpenGLWindow*>(&owner)) {
     }
 
     ImguiLayer::~ImguiLayer() {
@@ -18,9 +19,6 @@ namespace swheel {
     }
 
     void ImguiLayer::OnAttach() {
-        // TODO: implement type check here
-        m_ownerOpenGLWindow = (OpenGLWindow*)&m_ownerWindow;
-
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
@@ -38,7 +36,7 @@ namespace swheel {
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        ImGui_ImplSDL2_InitForOpenGL(m_ownerOpenGLWindow->GetSDLWindow(), m_ownerOpenGLWindow->GetSDLGLContext());
+        ImGui_ImplSDL2_InitForOpenGL(m_ownerOpenGLWindow.GetSDLWindow(), m_ownerOpenGLWindow.GetSDLGLContext());
         ImGui_ImplOpenGL3_Init("#version 460");
     }
 
@@ -49,19 +47,27 @@ namespace swheel {
     }
 
     void ImguiLayer::OnUpdate() {
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame();
-        ImGui::NewFrame();
+        ImguiFrameBegin();
 
         static bool show = true;
         ImGui::ShowDemoWindow(&show);
 
-        ImGuiIO& io = ImGui::GetIO();
-        io.DisplaySize = ImVec2(m_ownerOpenGLWindow->GetWidth(), m_ownerOpenGLWindow->GetHeight());
+        ImguiFrameEnd();
+    }
 
-        // Uint32 time = SDL_GetTicks();
-        // io.DeltaTime = m_time > 0 ? (time - m_time) / 1000.0f : (1.0f / 60.0f);
-        // m_time = time;
+    void ImguiLayer::OnEvent(Event& event) {
+        event.m_handled = ImGui_ImplSDL2_ProcessEvent(&event.m_event);
+    }
+
+    void ImguiLayer::ImguiFrameBegin() {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame();
+        ImGui::NewFrame();
+    }
+
+    void ImguiLayer::ImguiFrameEnd() {
+        ImGuiIO& io = ImGui::GetIO();
+        io.DisplaySize = ImVec2(m_ownerOpenGLWindow.GetWidth(), m_ownerOpenGLWindow.GetHeight());
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -75,9 +81,5 @@ namespace swheel {
             ImGui::RenderPlatformWindowsDefault();
             SDL_GL_MakeCurrent(currentWindow, currentContext);
         }
-    }
-
-    void ImguiLayer::OnEvent(Event& event) {
-        event.m_handled = ImGui_ImplSDL2_ProcessEvent(&event.m_event);
     }
 }

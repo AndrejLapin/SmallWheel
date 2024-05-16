@@ -6,7 +6,7 @@
 namespace  swheel {
     class Layer {
     public:
-        Layer(Window& owner, const std::string& name = "Layer"): m_ownerWindow(owner), m_debugName(name) {}
+        Layer(const Window& owner, const std::string& name = "Layer"): m_debugName(name) {}
         virtual ~Layer() {}
 
         virtual void OnAttach() {}
@@ -16,7 +16,6 @@ namespace  swheel {
 
         inline const std::string& GetDebugName() const { return m_debugName; }
     protected:
-        Window& m_ownerWindow;
         std::string m_debugName;
     };
 }

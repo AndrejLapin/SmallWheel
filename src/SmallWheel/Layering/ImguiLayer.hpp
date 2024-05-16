@@ -8,7 +8,7 @@ namespace swheel {
 
     class ImguiLayer : public Layer {
     public:
-        ImguiLayer(Window& owner, const std::string& name = "Layer");
+        ImguiLayer(const Window& owner, const std::string& name = "Layer");
         ~ImguiLayer();
 
         void OnAttach() override;
@@ -17,6 +17,9 @@ namespace swheel {
         void OnEvent(Event& event) override;
 
     private:
-        OpenGLWindow* m_ownerOpenGLWindow;
+        void ImguiFrameBegin();
+        void ImguiFrameEnd();
+
+        const OpenGLWindow& m_ownerOpenGLWindow;
     };
 }
