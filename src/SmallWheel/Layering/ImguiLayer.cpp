@@ -9,7 +9,7 @@
 #include "imgui/backends/imgui_impl_opengl3.h"
 
 namespace swheel {
-    ImguiLayer::ImguiLayer(Window& owner, const std::string& name): Layer(owner, name), m_time(SDL_GetTicks()) {
+    ImguiLayer::ImguiLayer(Window& owner, const std::string& name): Layer(owner, name) {
 
     }
 
@@ -75,5 +75,9 @@ namespace swheel {
             ImGui::RenderPlatformWindowsDefault();
             SDL_GL_MakeCurrent(currentWindow, currentContext);
         }
+    }
+
+    void ImguiLayer::OnEvent(Event& event) {
+        event.m_handled = ImGui_ImplSDL2_ProcessEvent(&event.m_event);
     }
 }
