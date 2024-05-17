@@ -6,7 +6,6 @@
 #include "SDL.h"
 #include "SDL_video.h"
 #include "SmallWheel/Event.hpp"
-#include <memory>
 
 namespace swheel {
     OpenGLWindow::OpenGLWindow(const std::string& title, int width, int height):

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Layer.hpp"
-#include <cstdint>
+#include "SmallWheel/Layering/Layer.hpp"
 
 namespace swheel {
+    class ImguiLayerImpl;
     class OpenGLWindow;
 
     class ImguiLayer : public Layer {
@@ -17,9 +17,6 @@ namespace swheel {
         void OnEvent(Event& event) override;
 
     private:
-        void ImguiFrameBegin();
-        void ImguiFrameEnd();
-
-        const OpenGLWindow& m_ownerOpenGLWindow;
+        std::unique_ptr<ImguiLayerImpl> m_layerImpl;
     };
 }

@@ -1,16 +1,13 @@
-#include "SmallWheel/Renderer/Renderer.hpp"
 #include "swpch.hpp"
 #include "Application.hpp"
-#include "glad/gl.h"
 
+#include "glad/gl.h"
 #include "Event.hpp"
+#include "Window.hpp"
+#include "SmallWheel/Renderer/Renderer.hpp"
 #include "Platform/OpenGL/OpenGLWindow.hpp"
 #include "Renderer/Shader.hpp"
-#include "Renderer/Shader.hpp"
-#include "Window.hpp"
-
-#include "Platform/OpenGL/OpenGLRenderer.hpp"
-#include "SmallWheel/Layering/ImguiLayer.hpp"
+#include "SmallWheel/Imgui/ImguiLayer.hpp"
 
 namespace swheel {
 
@@ -27,13 +24,12 @@ namespace swheel {
         // Nicer way to create Window (same like it was with renderer)
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
 
-        Renderer& renderer = m_window->GetRenderer();
+        const Renderer& renderer = m_window->GetRenderer();
         // TODO: move to renderer, to init function or something
         InitGlad();
 
         {
             m_window->PushOverlay<ImguiLayer>("Imgui");
-            // m_window
         }
 
         GLCall(glGenVertexArrays(1, &m_vertexArray));
@@ -93,7 +89,7 @@ namespace swheel {
 
     void Application::Run() {
         Event event;
-        Renderer& renderer = m_window->GetRenderer();
+        const Renderer& renderer = m_window->GetRenderer();
         do {
             renderer.Clear();
 

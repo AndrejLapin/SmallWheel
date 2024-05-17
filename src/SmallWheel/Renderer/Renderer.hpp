@@ -23,6 +23,8 @@ namespace swheel {
         std::unique_ptr<IndexBuffer> CreateIndexBuffer(uint32_t* indecies, uint32_t size) const;
         std::unique_ptr<VertexBuffer> CreateVertexBuffer(float* vertices, uint32_t size) const;
 
+        RendererAPI GetAPIType() const { return m_type; }
+
     private:
         RendererAPI m_type;
     };

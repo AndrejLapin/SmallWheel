@@ -1,8 +1,8 @@
 #include "swpch.hpp"
 #include "OpenGLBuffer.hpp"
-#include "OpenGLRenderer.hpp"
 
 #include "glad/gl.h"
+#include "OpenGLRenderer.hpp"
 
 namespace swheel {
     OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indecies, uint32_t count): m_count(count) {

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "SDLLifeTime.hpp"
-#include "SmallWheel/Renderer/Buffer.hpp"
-#include "SmallWheel/Renderer/Renderer.hpp"
 
 namespace swheel {
     class Window;
     class Shader;
+    class IndexBuffer;
+    class VertexBuffer;
 
     // SDL based application
     class Application {

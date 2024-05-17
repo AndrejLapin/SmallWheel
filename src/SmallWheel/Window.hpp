@@ -24,7 +24,7 @@ namespace swheel {
             PushOverlay(std::move(std::make_unique<T>(*this, std::forward<Args>(args)...)));
         }
 
-        virtual Renderer& GetRenderer() = 0;
+        virtual const Renderer& GetRenderer() const = 0;
 
     private:
         virtual void PushLayer(std::unique_ptr<Layer> layer) = 0;

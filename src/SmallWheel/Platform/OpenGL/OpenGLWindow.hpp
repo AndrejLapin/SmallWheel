@@ -1,8 +1,6 @@
 #pragma once
 
 #include "OpenGLRenderer.hpp"
-#include "SDL_video.h"
-#include "SmallWheel/Layering/Layer.hpp"
 #include "SmallWheel/Window.hpp"
 #include "SmallWheel/Layering/LayerStack.hpp"
 
@@ -15,7 +13,7 @@ namespace swheel {
         void OnEvent(Event& event) override;
         void OnUpdate() override;
         bool IsClosed() const override { return m_closed; }
-        Renderer& GetRenderer() override { return *m_renderer.get();}
+        Renderer& GetRenderer() const override { return *m_renderer.get();}
 
         int GetWidth() const { return m_width; }
         int GetHeight() const { return m_height; }

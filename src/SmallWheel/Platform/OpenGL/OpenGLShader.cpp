@@ -1,10 +1,8 @@
-#include "OpenGLRenderer.hpp"
-#include "SmallWheel/Renderer/Shader.hpp"
 #include "swpch.hpp"
 #include "OpenGLShader.hpp"
 
-#include "SmallWheel/Core.hpp"
-#include "SmallWheel/Utils/Result.hpp"
+#include "OpenGLRenderer.hpp"
+#include "SmallWheel/Renderer/Shader.hpp"
 
 namespace swheel {
     OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
