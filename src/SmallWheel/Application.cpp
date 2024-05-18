@@ -8,6 +8,7 @@
 #include "Platform/OpenGL/OpenGLWindow.hpp"
 #include "Renderer/Shader.hpp"
 #include "SmallWheel/Imgui/ImguiLayer.hpp"
+#include "Renderer/VertexLayout.hpp"
 
 namespace swheel {
 
@@ -42,6 +43,11 @@ namespace swheel {
         };
 
         m_vertexBuffer = renderer.CreateVertexBuffer(vertices, sizeof(vertices));
+
+        VertexLayout layout ({
+            {VertexDataType::Float3, "position"},
+            {VertexDataType::Float4, "color"}
+        });
 
         GLCall(glEnableVertexAttribArray(0));
         GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
@@ -80,6 +86,7 @@ namespace swheel {
     Application::~Application() {
     }
 
+    // TODO: move to SDLLifetime
     // Doesn't need to be tied to the application
     void Application::PrintSDLErrors() {
         while (auto error = SDL_GetError()) {
