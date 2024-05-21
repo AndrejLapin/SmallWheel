@@ -3,7 +3,7 @@
 #include "SmallWheel/Core.hpp"
 
 namespace swheel {
-    namespace VertexPropertyUnion {
+    namespace propertyUnion {
         union Single {
             float data;
         };
@@ -44,6 +44,8 @@ namespace swheel {
         Float4
     };
 
+    // Has yet to be tested
+    // Maybe unit tests should be created?
     template<class T>
     class VertexPropertyView {
     public:

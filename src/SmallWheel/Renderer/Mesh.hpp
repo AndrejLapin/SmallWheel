@@ -5,9 +5,10 @@
 namespace swheel {
     class Mesh {
     public:
-        Mesh(VertexLayout& layout, float* vertexData, uint32_t vertexCount, uint32_t* indecies, uint32_t indexCount);
+        Mesh(const VertexLayout& layout, float* vertexData, uint32_t vertexCount, uint32_t* indecies, uint32_t indexCount);
         ~Mesh();
 
+        const VertexLayout& GetLayout() const { return m_layout; }
         VertexPropertyType GetPropertyType(const std::string& propertyName);
 
         template<class T>
@@ -17,7 +18,7 @@ namespace swheel {
         }
 
     private:
-        VertexLayout& m_layout;
+        const VertexLayout& m_layout;
         float* m_vertexData;
         uint32_t m_vertexCount;
         uint32_t* m_indecieis;
