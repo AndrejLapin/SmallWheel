@@ -18,7 +18,7 @@ namespace swheel {
 
     private:
         VertexLayout& m_layout;
-        float* m_vertexData; // should be void?
+        float* m_vertexData;
         uint32_t m_vertexCount;
         uint32_t* m_indecieis;
         uint32_t m_indexCount;
