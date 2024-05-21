@@ -44,13 +44,13 @@ namespace swheel {
 
         m_vertexBuffer = renderer.CreateVertexBuffer(vertices, sizeof(vertices));
 
-        VertexLayout layout ({
-            {VertexDataType::Float3, "position"},
-            {VertexDataType::Float4, "color"}
-        });
-
         GLCall(glEnableVertexAttribArray(0));
         GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
+
+        VertexLayout layout ({
+            {VertexPropertyType::Float3, "position"},
+            {VertexPropertyType::Float4, "color"}
+        });
 
         unsigned int indecies[3] = { 0, 1, 2 };
         m_indexBuffer = renderer.CreateIndexBuffer(indecies, sizeof(indecies));
@@ -97,6 +97,14 @@ namespace swheel {
     void Application::Run() {
         Event event;
         const Renderer& renderer = m_window->GetRenderer();
+
+        float vertices[3 * 3] = {
+            -0.8f, 0.5f, 0.0f,
+            0.2f, 0.5f, 0.0f,
+            -0.3f,  -0.5f, 0.0f
+        };
+        unsigned int indecies[3] = { 0, 1, 2 };
+
         do {
             renderer.Clear();
 

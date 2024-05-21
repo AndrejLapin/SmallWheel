@@ -7,4 +7,5 @@
 #include <variant>
 #include <vector>
 #include <map>
+#include <cstring>
 #include <initializer_list>
