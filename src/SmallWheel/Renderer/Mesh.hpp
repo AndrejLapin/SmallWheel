@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VertexLayout.hpp"
+#include "SmallWheel/Platform/OpenGL/OpenGLMeshData.h"
 
 namespace swheel {
     class Mesh {
@@ -23,5 +24,11 @@ namespace swheel {
         uint32_t m_vertexCount;
         uint32_t* m_indecieis;
         uint32_t m_indexCount;
+        // Maybe this should not be a union?
+        // Each api should be able to have it's own data seperately
+        // Or a specific version of a mesh for specific API should be created?
+        union {
+            struct OpenGLMeshData;
+        }m_graphicsAPIData;
     };
 }
