@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mesh.hpp"
+#include "MeshData.hpp"
 #include "VertexLayout.hpp"
 
 // Here code is being mixed with data, maybe not good
@@ -8,7 +8,7 @@
 namespace swheel::commonLayouts {
     class Position {
     public:
-        static VertexPropertyView<propertyUnion::Triple> GetPosition(Mesh& mesh);
+        static VertexPropertyView<propertyUnion::Triple> GetPosition(MeshData& mesh);
         static const VertexLayout& Layout() { return s_layout; }
 
     private:
@@ -20,8 +20,8 @@ namespace swheel::commonLayouts {
 
     class PositionUV {
     public:
-        static VertexPropertyView<propertyUnion::Triple> GetPosition(Mesh& mesh);
-        static VertexPropertyView<propertyUnion::Pair>   GetUV(Mesh& mesh);
+        static VertexPropertyView<propertyUnion::Triple> GetPosition(MeshData& mesh);
+        static VertexPropertyView<propertyUnion::Pair>   GetUV(MeshData& mesh);
         static const VertexLayout& Layout() { return s_layout; }
 
     private:
@@ -33,8 +33,8 @@ namespace swheel::commonLayouts {
 
     class PositionColor {
     public:
-        static VertexPropertyView<propertyUnion::Triple> GetPosition(Mesh& mesh);
-        static VertexPropertyView<propertyUnion::Quad>   GetColor(Mesh& mesh);
+        static VertexPropertyView<propertyUnion::Triple> GetPosition(MeshData& mesh);
+        static VertexPropertyView<propertyUnion::Quad>   GetColor(MeshData& mesh);
         static const VertexLayout& Layout() { return s_layout; }
 
     private:
@@ -46,9 +46,9 @@ namespace swheel::commonLayouts {
 
     class PositionUVColor {
     public:
-        static VertexPropertyView<propertyUnion::Triple> GetPosition(Mesh& mesh);
-        static VertexPropertyView<propertyUnion::Pair>   GetUV(Mesh& mesh);
-        static VertexPropertyView<propertyUnion::Quad>   GetColor(Mesh& mesh);
+        static VertexPropertyView<propertyUnion::Triple> GetPosition(MeshData& mesh);
+        static VertexPropertyView<propertyUnion::Pair>   GetUV(MeshData& mesh);
+        static VertexPropertyView<propertyUnion::Quad>   GetColor(MeshData& mesh);
         static const VertexLayout& Layout() { return s_layout; }
 
     private:

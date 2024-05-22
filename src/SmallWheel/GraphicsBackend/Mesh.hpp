@@ -1,27 +1,18 @@
 #pragma once
 
-#include "VertexLayout.hpp"
+#include "MeshData.hpp"
 
 namespace swheel {
     class Mesh {
     public:
-        Mesh(const VertexLayout& layout, float* vertexData, uint32_t vertexCount, uint32_t* indecies, uint32_t indexCount);
-        ~Mesh();
+        Mesh(const MeshData& meshData): m_meshData(meshData) {}
 
-        const VertexLayout& GetLayout() const { return m_layout; }
-        VertexPropertyType GetPropertyType(const std::string& propertyName);
+        virtual void Load() = 0;
+        virtual void Unload() = 0;
+        virtual void Bind() = 0;
+        virtual void Unbind() = 0;
 
-        template<class T>
-        VertexPropertyView<T> GetPropertyView(std::string propertyName) {
-            const VertexProperty& property = m_layout.GetProperty(propertyName);
-            return VertexPropertyView<T>(m_layout.GetStride(), m_vertexCount, m_vertexData + property.offset);
-        }
-
-    private:
-        const VertexLayout& m_layout;
-        float* m_vertexData;
-        uint32_t m_vertexCount;
-        uint32_t* m_indecieis;
-        uint32_t m_indexCount;
+    protected:
+        const MeshData& m_meshData;
     };
 }

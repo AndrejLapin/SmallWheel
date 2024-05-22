@@ -124,6 +124,11 @@ namespace swheel {
         const VertexProperty& GetProperty(const std::string& propertyName) const;
         uint32_t GetStride() const { return m_stride; }
 
+        std::map<std::string, VertexProperty>::iterator begin() { return m_properties.begin(); }
+        std::map<std::string, VertexProperty>::const_iterator begin() const { return m_properties.begin(); }
+
+        std::map<std::string, VertexProperty>::iterator end() { return m_properties.end(); }
+        std::map<std::string, VertexProperty>::const_iterator end() const { return m_properties.end(); }
     private:
         std::map<std::string, VertexProperty> m_properties;
         uint32_t m_stride = 0;

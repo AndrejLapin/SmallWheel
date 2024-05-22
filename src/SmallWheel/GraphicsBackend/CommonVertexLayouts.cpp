@@ -9,7 +9,7 @@ namespace swheel::commonLayouts {
         {VertexPropertyType::Float3, "pos"}
     });
 
-    VertexPropertyView<propertyUnion::Triple> Position::GetPosition(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Triple> Position::GetPosition(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Triple>("pos");
     }
@@ -19,12 +19,12 @@ namespace swheel::commonLayouts {
         {VertexPropertyType::Float2, "uv"}
     });
 
-    VertexPropertyView<propertyUnion::Triple> PositionUV::GetPosition(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Triple> PositionUV::GetPosition(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Triple>("pos");
     }
     
-    VertexPropertyView<propertyUnion::Pair> PositionUV::GetUV(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Pair> PositionUV::GetUV(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Pair>("uv");
     }
@@ -34,12 +34,12 @@ namespace swheel::commonLayouts {
         {VertexPropertyType::Float4, "col"}
     });
 
-    VertexPropertyView<propertyUnion::Triple> PositionColor::GetPosition(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Triple> PositionColor::GetPosition(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Triple>("pos");
     }
 
-    VertexPropertyView<propertyUnion::Quad> PositionColor::GetColor(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Quad> PositionColor::GetColor(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Quad>("col");
     }
@@ -50,17 +50,17 @@ namespace swheel::commonLayouts {
         {VertexPropertyType::Float4, "col"}
     });
 
-    VertexPropertyView<propertyUnion::Triple> PositionUVColor::GetPosition(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Triple> PositionUVColor::GetPosition(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Triple>("pos");
     }
 
-    VertexPropertyView<propertyUnion::Pair> PositionUVColor::GetUV(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Pair> PositionUVColor::GetUV(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Pair>("uv");
     }
 
-    VertexPropertyView<propertyUnion::Quad> PositionUVColor::GetColor(Mesh& mesh) {
+    VertexPropertyView<propertyUnion::Quad> PositionUVColor::GetColor(MeshData& mesh) {
         SW_ASSERT_LOG(&mesh.GetLayout() == &s_layout, "Wrong mesh layout type!");
         return mesh.GetPropertyView<propertyUnion::Quad>("col");
     }
