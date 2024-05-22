@@ -56,5 +56,5 @@ namespace swheel::commonLayouts {
     
     private:
         static const VertexLayout s_layout;
-    }
+    };
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glad/gl.h"
-#include "SmallWheel/Renderer/Shader.hpp"
+#include "SmallWheel/GraphicsBackend/Shader.hpp"
 #include "SmallWheel/Utils/Result.hpp"
 
 namespace swheel {

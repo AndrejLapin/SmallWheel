@@ -3,14 +3,14 @@
 
 #include "imgui/backends/imgui_impl_sdl2.h"
 
-#include "SmallWheel/Renderer/Renderer.hpp"
+#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLWindow.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLImguiLayerImpl.hpp"
 
 namespace swheel {
     ImguiLayer::ImguiLayer(const Window& owner, const std::string& name): 
         Layer(owner, name) {
-        RendererAPI apiType = owner.GetRenderer().GetAPIType();
+        RendererAPI apiType = owner.GetGraphicsBackend().GetAPIType();
         switch (apiType) {
         case RendererAPI::OpenGL: {
             m_layerImpl = std::make_unique<OpenGLImguiLayerImpl>(*static_cast<const OpenGLWindow*>(&owner));

@@ -51,31 +51,31 @@ namespace swheel {
     public:
         class Iterator {
         public:
-            Iterator(uint32_t stride, void* data):
+            Iterator(uint32_t stride, float* data):
                 m_stride(stride), m_ptr(data) {}
 
-            T& operator*() { return *m_ptr; }
-            const T& operator*() const { return *m_ptr; }
+            T& operator*() { return *reinterpret_cast<T*>(m_ptr); }
+            const T& operator*() const { return *reinterpret_cast<T*>(m_ptr); }
 
             Iterator& operator++() {
-                m_ptr = reinterpret_cast<short*>(m_ptr) + m_stride;
+                m_ptr += m_stride;
                 return *this;
             }
 
             Iterator operator++(int) {
                 Iterator result = *this;
-                m_ptr = reinterpret_cast<short*>(m_ptr) + m_stride;
+                m_ptr += m_stride;
                 return result;
             }
 
             Iterator& operator--() {
-                m_ptr = reinterpret_cast<short*>(m_ptr) - m_stride;
+                m_ptr -= m_stride;
                 return *this;
             }
 
             Iterator operator--(int) {
                 Iterator result = *this;
-                m_ptr = reinterpret_cast<short*>(m_ptr) - m_stride;
+                m_ptr -= m_stride;
                 return result;
             }
 
@@ -83,23 +83,23 @@ namespace swheel {
             bool operator!=(const Iterator& other) const { return m_ptr != other.m_ptr; }
 
             private:
-                T* m_ptr;
+                float* m_ptr;
                 uint32_t m_stride;
         };
 
     public:
-        VertexPropertyView(uint32_t stride, uint32_t count, void* data):
+        VertexPropertyView(uint32_t stride, uint32_t count, float* data):
             m_stride(stride), m_count(count), m_data(data) {}
         
-        T& operator[](std::size_t index) { return reinterpret_cast<short*>(m_data) + (index * m_stride); }
-        const T& operator[](std::size_t index) const { return reinterpret_cast<short*>(m_data) + (index * m_stride); }
+        T& operator[](std::size_t index) { return *reinterpret_cast<T*>(m_data + (index * m_stride)); }
+        const T& operator[](std::size_t index) const { return *reinterpret_cast<T*>(m_data + (index * m_stride)); }
         uint32_t GetCount() { return m_count; }
 
         Iterator begin() const { return Iterator(m_stride, m_data); }
-        Iterator end()   const { return Iterator(m_stride, reinterpret_cast<short*>(m_data) + (m_count * m_stride)); }
+        Iterator end()   const { return Iterator(m_stride, reinterpret_cast<T*>(m_data + (m_count * m_stride))); }
 
     private:
-        T* m_data;
+        float* m_data;
         uint32_t m_count;
         uint32_t m_stride;
     };

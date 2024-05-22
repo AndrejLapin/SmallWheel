@@ -1,34 +1,34 @@
 #include "swpch.hpp"
-#include "Renderer.hpp"
+#include "GraphicsBackend.hpp"
 
 #include "SmallWheel/Core.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLBuffer.hpp"
-#include "SmallWheel/Platform/OpenGL/OpenGLRenderer.hpp"
+#include "SmallWheel/Platform/OpenGL/OpenGLBackend.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLShader.hpp"
 
 namespace swheel {
-    std::unique_ptr<Renderer> Renderer::CreateRenderer(RendererAPI type) {
+    std::unique_ptr<GraphicsBackend> GraphicsBackend::CreateRenderer(RendererAPI type) {
         switch (type) {
-        case RendererAPI::OpenGL: return std::make_unique<OpenGLRenderer>();
+        case RendererAPI::OpenGL: return std::make_unique<OpenGLBackend>();
         }
         SW_ASSERT(false);
     }
 
-    std::unique_ptr<Shader> Renderer::CreateShader(const std::string& vetexSrc, const std::string& fragmentSrc) const {
+    std::unique_ptr<Shader> GraphicsBackend::CreateShader(const std::string& vetexSrc, const std::string& fragmentSrc) const {
         switch (m_type) {
         case RendererAPI::OpenGL: return std::make_unique<OpenGLShader>(vetexSrc, fragmentSrc);
         }
         SW_ASSERT(false);
     }
 
-    std::unique_ptr<IndexBuffer> Renderer::CreateIndexBuffer(uint32_t* indecies, uint32_t size) const {
+    std::unique_ptr<IndexBuffer> GraphicsBackend::CreateIndexBuffer(uint32_t* indecies, uint32_t size) const {
         switch (m_type) {
         case RendererAPI::OpenGL: return std::make_unique<OpenGLIndexBuffer>(indecies, size);
         }
         SW_ASSERT(false);
     }
 
-    std::unique_ptr<VertexBuffer> Renderer::CreateVertexBuffer(float* vertices, uint32_t size) const {
+    std::unique_ptr<VertexBuffer> GraphicsBackend::CreateVertexBuffer(float* vertices, uint32_t size) const {
         switch (m_type) {
         case RendererAPI::OpenGL: return std::make_unique<OpenGLVertexBuffer>(vertices, size);
         }

@@ -1,5 +1,5 @@
 #include "swpch.hpp"
-#include "OpenGLRenderer.hpp"
+#include "OpenGLBackend.hpp"
 
 #include "glad/gl.h"
 
@@ -17,17 +17,17 @@ namespace swheel {
         return true;
     }
 
-    void OpenGLRenderer::Clear() const {
+    void OpenGLBackend::Clear() const {
         GLCall(glClearColor(0.2f, 0.3f, 0.5f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
     }
 
-    OpenGLRenderer::OpenGLRenderer(): Renderer(RendererAPI::OpenGL) {}
+    OpenGLBackend::OpenGLBackend(): GraphicsBackend(RendererAPI::OpenGL) {}
 
-    OpenGLRenderer::~OpenGLRenderer() {}
+    OpenGLBackend::~OpenGLBackend() {}
 
     //                    should be vertex array instead of a VertexBuffer
-    void OpenGLRenderer::Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const {
+    void OpenGLBackend::Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const {
         shader.Bind();
         va.Bind();
         ib.Bind();

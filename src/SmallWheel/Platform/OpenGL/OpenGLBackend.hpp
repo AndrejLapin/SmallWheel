@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SmallWheel/Core.hpp"
-#include "SmallWheel/Renderer/Renderer.hpp"
+#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 
 #ifdef SW_ENABLE_GRAPHICS_DEBUG
 #define GLCall(x) GLClearError();\
@@ -18,10 +18,10 @@ namespace swheel {
     void GLClearError();
     bool GLLogCall(const char* function, const char* file, int line);
 
-    class OpenGLRenderer : public Renderer {
+    class OpenGLBackend : public GraphicsBackend {
     public:
-        OpenGLRenderer();
-        ~OpenGLRenderer();
+        OpenGLBackend();
+        ~OpenGLBackend();
 
         void Clear() const override;
         void Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const override;

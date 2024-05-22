@@ -1,7 +1,8 @@
-#include "SmallWheel/Core.hpp"
-#include "VertexLayout.hpp"
 #include "swpch.hpp"
 #include "CommonVertexLayouts.hpp"
+
+#include "SmallWheel/Core.hpp"
+#include "VertexLayout.hpp"
 
 namespace swheel::commonLayouts {
     const VertexLayout Position::s_layout = VertexLayout({

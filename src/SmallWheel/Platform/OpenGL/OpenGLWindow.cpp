@@ -1,8 +1,8 @@
-#include "OpenGLRenderer.hpp"
-#include "SmallWheel/Renderer/Renderer.hpp"
 #include "swpch.hpp"
 #include "OpenGLWindow.hpp"
 
+#include "OpenGLBackend.hpp"
+#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 #include "SDL.h"
 #include "SDL_video.h"
 #include "SmallWheel/Event.hpp"
@@ -10,7 +10,7 @@
 namespace swheel {
     OpenGLWindow::OpenGLWindow(const std::string& title, int width, int height):
     m_title(title), m_width(width), m_height(height) {
-        m_renderer = std::make_unique<OpenGLRenderer>();
+        m_backend = std::make_unique<OpenGLBackend>();
         if (!Init()) {
             m_closed = true;
         }

@@ -8,15 +8,16 @@ namespace swheel {
         OpenGL
     };
 
-    class Renderer {
+    class GraphicsBackend {
     public:
-        explicit Renderer(RendererAPI type): m_type(type) {}
-        virtual ~Renderer() {}
+        explicit GraphicsBackend(RendererAPI type): m_type(type) {}
+        virtual ~GraphicsBackend() {}
 
         virtual void Clear() const = 0;
         virtual void Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const = 0;
 
-        static std::unique_ptr<Renderer> CreateRenderer(RendererAPI type);
+        // should actually be a renderer
+        static std::unique_ptr<GraphicsBackend> CreateRenderer(RendererAPI type);
 
         // Maybe this should be managed by the shader itself?
         std::unique_ptr<Shader> CreateShader(const std::string& vetexSrc, const std::string& fragmentSrc) const;

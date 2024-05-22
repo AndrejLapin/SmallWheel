@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/Renderer.hpp"
+#include "GraphicsBackend/GraphicsBackend.hpp"
 #include "Event.hpp"
 
 namespace swheel {
@@ -24,7 +24,7 @@ namespace swheel {
             PushOverlay(std::move(std::make_unique<T>(*this, std::forward<Args>(args)...)));
         }
 
-        virtual const Renderer& GetRenderer() const = 0;
+        virtual const GraphicsBackend& GetGraphicsBackend() const = 0;
 
     private:
         virtual void PushLayer(std::unique_ptr<Layer> layer) = 0;

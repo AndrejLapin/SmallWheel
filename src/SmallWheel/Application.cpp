@@ -4,11 +4,11 @@
 #include "glad/gl.h"
 #include "Event.hpp"
 #include "Window.hpp"
-#include "SmallWheel/Renderer/Renderer.hpp"
+#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 #include "Platform/OpenGL/OpenGLWindow.hpp"
-#include "Renderer/Shader.hpp"
+#include "GraphicsBackend/Shader.hpp"
 #include "SmallWheel/Imgui/ImguiLayer.hpp"
-#include "Renderer/VertexLayout.hpp"
+#include "GraphicsBackend/VertexLayout.hpp"
 
 namespace swheel {
 
@@ -25,7 +25,7 @@ namespace swheel {
         // Nicer way to create Window (same like it was with renderer)
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
 
-        const Renderer& renderer = m_window->GetRenderer();
+        const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
         // TODO: move to renderer, to init function or something
         InitGlad();
 
@@ -42,7 +42,7 @@ namespace swheel {
             0.0f,  0.5f, 0.0f
         };
 
-        m_vertexBuffer = renderer.CreateVertexBuffer(vertices, sizeof(vertices));
+        m_vertexBuffer = graphicsBackend.CreateVertexBuffer(vertices, sizeof(vertices));
 
         GLCall(glEnableVertexAttribArray(0));
         GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
@@ -53,7 +53,7 @@ namespace swheel {
         });
 
         unsigned int indecies[3] = { 0, 1, 2 };
-        m_indexBuffer = renderer.CreateIndexBuffer(indecies, sizeof(indecies));
+        m_indexBuffer = graphicsBackend.CreateIndexBuffer(indecies, sizeof(indecies));
 
         std::string vertexSrc = R"(
             #version 460 core
@@ -80,7 +80,7 @@ namespace swheel {
             }
         )";
 
-        m_shader = renderer.CreateShader(vertexSrc, fragmentSrc);
+        m_shader = graphicsBackend.CreateShader(vertexSrc, fragmentSrc);
     }
 
     Application::~Application() {
@@ -96,7 +96,7 @@ namespace swheel {
 
     void Application::Run() {
         Event event;
-        const Renderer& renderer = m_window->GetRenderer();
+        const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
 
         float vertices[3 * 3] = {
             -0.8f, 0.5f, 0.0f,
@@ -106,7 +106,7 @@ namespace swheel {
         unsigned int indecies[3] = { 0, 1, 2 };
 
         do {
-            renderer.Clear();
+            graphicsBackend.Clear();
 
             GLCall(glBindVertexArray(m_vertexArray));
             m_shader->Bind();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SmallWheel/Renderer/Buffer.hpp"
+#include "SmallWheel/GraphicsBackend/Buffer.hpp"
 
 namespace swheel {
     class OpenGLIndexBuffer : public IndexBuffer {

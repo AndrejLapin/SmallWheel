@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OpenGLRenderer.hpp"
+#include "OpenGLBackend.hpp"
 #include "SmallWheel/Window.hpp"
 #include "SmallWheel/Layering/LayerStack.hpp"
 
@@ -13,7 +13,7 @@ namespace swheel {
         void OnEvent(Event& event) override;
         void OnUpdate() override;
         bool IsClosed() const override { return m_closed; }
-        Renderer& GetRenderer() const override { return *m_renderer.get();}
+        GraphicsBackend& GetGraphicsBackend() const override { return *m_backend.get();}
 
         int GetWidth() const { return m_width; }
         int GetHeight() const { return m_height; }
@@ -29,7 +29,7 @@ namespace swheel {
         int m_width;
         int m_height;
 
-        std::unique_ptr<OpenGLRenderer> m_renderer;
+        std::unique_ptr<OpenGLBackend> m_backend;
         LayerStack m_layerStack;
 
         SDL_Window* m_window = nullptr;
