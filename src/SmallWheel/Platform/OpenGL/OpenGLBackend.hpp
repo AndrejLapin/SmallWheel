@@ -24,5 +24,7 @@ namespace swheel {
         ~OpenGLBackend();
 
         void Clear() const override;
+    private:
+        void InitGlad();
     };
 }

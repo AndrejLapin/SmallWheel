@@ -5,5 +5,7 @@ namespace swheel {
     public:
         SDLLifetime();
         ~SDLLifetime();
+        void Init();
+        static void PrintSDLErrors();
     };
 }

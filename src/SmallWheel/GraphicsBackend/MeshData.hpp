@@ -1,7 +1,6 @@
 #pragma once
 
 #include "VertexLayout.hpp"
-#include <cstdint>
 
 namespace swheel {
     class MeshData {

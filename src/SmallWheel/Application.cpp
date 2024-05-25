@@ -1,22 +1,23 @@
-#include "GraphicsBackend/Mesh.hpp"
-#include "SmallWheel/GraphicsBackend/MeshData.hpp"
 #include "swpch.hpp"
 #include "Application.hpp"
 
 #include "glad/gl.h"
 #include "Event.hpp"
 #include "Window.hpp"
-#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 #include "Platform/OpenGL/OpenGLWindow.hpp"
+#include "Imgui/ImguiLayer.hpp"
 #include "GraphicsBackend/Shader.hpp"
-#include "SmallWheel/Imgui/ImguiLayer.hpp"
+#include "GraphicsBackend/GraphicsBackend.hpp"
 #include "GraphicsBackend/VertexLayout.hpp"
 #include "GraphicsBackend/CommonVertexLayouts.hpp"
 #include "GraphicsBackend/Renderers/SimpleMeshRenderer.hpp"
+#include "GraphicsBackend/Mesh.hpp"
+#include "GraphicsBackend/MeshData.hpp"
 
 namespace swheel {
 
     Application::Application(const std::string& title, int width, int height) {
+        m_sdlLifetime.Init();
         // TODO: move to renderer if we even need this
         // SDL_GL_LoadLibrary(nullptr);
         // std::cout << "SDL application created\n";
@@ -30,8 +31,6 @@ namespace swheel {
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
 
         const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
-        // TODO: move to renderer, to init function or something
-        InitGlad();
         m_window->PushOverlay<ImguiLayer>("Imgui");
 
         std::string vertexSrc = R"(
@@ -65,14 +64,6 @@ namespace swheel {
     Application::~Application() {
     }
 
-    // TODO: move to SDLLifetime
-    // Doesn't need to be tied to the application
-    void Application::PrintSDLErrors() {
-        while (auto error = SDL_GetError()) {
-            std::cerr << error << '\n';
-        }
-    }
-
     void Application::Run() {
         Event event;
         const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
@@ -96,18 +87,5 @@ namespace swheel {
                 m_window->OnEvent(event);
             }
         } while (!m_window->IsClosed());
-    }
-
-    void Application::InitGlad() {
-        int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-        if (version == 0) {
-            PrintSDLErrors();
-            std::cerr << "Failed to initialize OpenGL context :(\n";
-            exit(1);
-        }
-        std::cout << "OpenGL Info:\n";
-        std::cout << " Vendor: " << glGetString(GL_VENDOR) << '\n';
-        std::cout << " Renderer: " << glGetString(GL_RENDERER) << '\n';
-        std::cout << " Version: " << glGetString(GL_VERSION) << '\n';
     }
 }

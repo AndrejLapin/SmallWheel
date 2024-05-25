@@ -18,11 +18,7 @@ namespace swheel {
         void Run();
 
     private:
-        void PrintSDLErrors();
-        void InitGlad();
-
-    private:
-        SDLLifetime sdlLifetime;
+        SDLLifetime m_sdlLifetime;
         std::unique_ptr<Window> m_window;
         std::unique_ptr<Shader> m_shader;
     };

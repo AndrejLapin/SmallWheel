@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GraphicsBackend/GraphicsBackend.hpp"
 #include "Event.hpp"
+#include "GraphicsBackend/GraphicsBackend.hpp"
 
 namespace swheel {
     class Layer;

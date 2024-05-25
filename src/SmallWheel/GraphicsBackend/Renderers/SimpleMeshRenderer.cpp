@@ -18,5 +18,7 @@ namespace swheel {
             GLCall(glDrawElements(GL_TRIANGLES, mesh.GetData().GetIndexCount(), GL_UNSIGNED_INT, nullptr));
         }break;
         }
+        mesh.Unbind();
+        shader.Unbind();
     }
 }

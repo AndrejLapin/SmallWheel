@@ -2,6 +2,8 @@
 #include "OpenGLBackend.hpp"
 
 #include "glad/gl.h"
+#include "SDL_video.h"
+#include "SmallWheel/SDLLifetime.hpp"
 
 namespace swheel {
     void GLClearError() {
@@ -23,8 +25,21 @@ namespace swheel {
     }
 
     OpenGLBackend::OpenGLBackend(): GraphicsBackend(RendererAPI::OpenGL) {
-        // InitGlad();
+        InitGlad();
     }
 
     OpenGLBackend::~OpenGLBackend() {}
+
+    void OpenGLBackend::InitGlad() {
+        int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
+        if (version == 0) {
+            SDLLifetime::PrintSDLErrors();
+            std::cerr << "Failed to initialize OpenGL context :(\n";
+            exit(1);
+        }
+        std::cout << "OpenGL Info:\n";
+        std::cout << " Vendor: " << glGetString(GL_VENDOR) << '\n';
+        std::cout << " Renderer: " << glGetString(GL_RENDERER) << '\n';
+        std::cout << " Version: " << glGetString(GL_VERSION) << '\n';
+    }
 }
