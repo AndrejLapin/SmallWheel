@@ -1,3 +1,5 @@
+#include "GraphicsBackend/Mesh.hpp"
+#include "SmallWheel/GraphicsBackend/MeshData.hpp"
 #include "swpch.hpp"
 #include "Application.hpp"
 
@@ -9,6 +11,8 @@
 #include "GraphicsBackend/Shader.hpp"
 #include "SmallWheel/Imgui/ImguiLayer.hpp"
 #include "GraphicsBackend/VertexLayout.hpp"
+#include "GraphicsBackend/CommonVertexLayouts.hpp"
+#include "GraphicsBackend/Renderers/SimpleMeshRenderer.hpp"
 
 namespace swheel {
 
@@ -28,32 +32,7 @@ namespace swheel {
         const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
         // TODO: move to renderer, to init function or something
         InitGlad();
-
-        {
-            m_window->PushOverlay<ImguiLayer>("Imgui");
-        }
-
-        GLCall(glGenVertexArrays(1, &m_vertexArray));
-        GLCall(glBindVertexArray(m_vertexArray));
-
-        float vertices[3 * 3] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f,  0.5f, 0.0f
-        };
-
-        m_vertexBuffer = graphicsBackend.CreateVertexBuffer(vertices, sizeof(vertices));
-
-        GLCall(glEnableVertexAttribArray(0));
-        GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
-
-        VertexLayout layout ({
-            {VertexPropertyType::Float3, "position"},
-            {VertexPropertyType::Float4, "color"}
-        });
-
-        unsigned int indecies[3] = { 0, 1, 2 };
-        m_indexBuffer = graphicsBackend.CreateIndexBuffer(indecies, sizeof(indecies));
+        m_window->PushOverlay<ImguiLayer>("Imgui");
 
         std::string vertexSrc = R"(
             #version 460 core
@@ -104,13 +83,13 @@ namespace swheel {
             -0.3f,  -0.5f, 0.0f
         };
         unsigned int indecies[3] = { 0, 1, 2 };
+        MeshData meshData(commonLayouts::Position::Layout(), vertices, 3, indecies, 3);
+        std::unique_ptr<Mesh> mesh = graphicsBackend.CreateMeshInstance(meshData);
+        mesh->Load();
 
         do {
             graphicsBackend.Clear();
-
-            GLCall(glBindVertexArray(m_vertexArray));
-            m_shader->Bind();
-            GLCall(glDrawElements(GL_TRIANGLES, m_indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr));
+            graphicsBackend.GetSimpleRenderer().DrawMesh(*m_shader, *mesh);
             m_window->OnUpdate();
 
             while(event.PollNextEvent()) {

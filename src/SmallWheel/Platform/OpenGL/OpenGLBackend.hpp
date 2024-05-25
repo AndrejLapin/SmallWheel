@@ -24,6 +24,5 @@ namespace swheel {
         ~OpenGLBackend();
 
         void Clear() const override;
-        void Draw(const VertexBuffer& va, const IndexBuffer& ib, const Shader& shader) const override;
     };
 }

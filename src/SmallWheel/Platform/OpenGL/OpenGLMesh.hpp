@@ -5,7 +5,7 @@
 #include "glad/gl.h"
 
 namespace swheel {
-    class OpenGLMesh : Mesh {
+    class OpenGLMesh : public Mesh {
     public:
         OpenGLMesh(const MeshData& mesh): Mesh(mesh) {}
         ~OpenGLMesh();
@@ -14,10 +14,12 @@ namespace swheel {
         void Unload() override;
         void Bind() override;
         void Unbind() override;
+        bool IsLoaded() override { return m_loaded; }
     
     private:
-        GLuint m_vertexArray;
-        GLuint m_vertexBuffer;
-        GLuint m_indexBuffer;
+        GLuint m_vertexArray = 0;
+        GLuint m_vertexBuffer = 0;
+        GLuint m_indexBuffer = 0;
+        bool m_loaded = false;
     };
 }

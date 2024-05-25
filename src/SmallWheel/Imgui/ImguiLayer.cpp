@@ -13,7 +13,7 @@ namespace swheel {
         RendererAPI apiType = owner.GetGraphicsBackend().GetAPIType();
         switch (apiType) {
         case RendererAPI::OpenGL: {
-            m_layerImpl = std::make_unique<OpenGLImguiLayerImpl>(*static_cast<const OpenGLWindow*>(&owner));
+            m_layerImpl = std::make_unique<OpenGLImguiLayerImpl>(static_cast<const OpenGLWindow&>(owner));
         }break;
         }
     }

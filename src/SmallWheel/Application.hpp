@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDLLifeTime.hpp"
+#include "GraphicsBackend/MeshData.hpp"
 
 namespace swheel {
     class Window;
@@ -24,10 +25,6 @@ namespace swheel {
         SDLLifetime sdlLifetime;
         std::unique_ptr<Window> m_window;
         std::unique_ptr<Shader> m_shader;
-        std::unique_ptr<IndexBuffer> m_indexBuffer;
-        std::unique_ptr<VertexBuffer> m_vertexBuffer;
-
-        unsigned int m_vertexArray;//, m_indexBuffer;
     };
 
     // To be defined in a Client
