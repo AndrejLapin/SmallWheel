@@ -2,6 +2,7 @@
 #include "OpenGLBackend.hpp"
 #include "SmallWheel/Core.hpp"
 #include "SmallWheel/GraphicsBackend/VertexLayout.hpp"
+#include <cstdint>
 
 namespace swheel {
     OpenGLMesh::~OpenGLMesh() {
@@ -24,11 +25,11 @@ namespace swheel {
 
         {
             uint32_t currentAttribute = 0;
-            for (auto& [key, properyt] : layout) {
+            for (auto& properyt : layout) {
                 GLCall(glEnableVertexAttribArray(currentAttribute));
                 uint32_t count = VertexDataTypeElementCount(properyt.type);
                 // can be something other than GL_FLOAT, implement
-                GLCall(glVertexAttribPointer(currentAttribute, count, GL_FLOAT, GL_FALSE, layout.GetStride(), nullptr));
+                GLCall(glVertexAttribPointer(currentAttribute, count, GL_FLOAT, GL_FALSE, layout.GetStride(), reinterpret_cast<const void*>(properyt.offset)));
                 currentAttribute++;
             }
         }

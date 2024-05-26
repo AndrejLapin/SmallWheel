@@ -37,11 +37,14 @@ namespace swheel {
             #version 460 core
 
             layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec4 a_Color;
 
             out vec3 v_Position;
+            out vec4 v_Color;
 
             void main() {
                 v_Position = a_Position + 0.5;
+                v_Color = a_Color;
                 gl_Position = vec4(a_Position, 1.0);
             }
         )";
@@ -52,9 +55,10 @@ namespace swheel {
             layout(location = 0) out vec4 o_Color;
 
             in vec3 v_Position;
+            in vec4 v_Color;
 
             void main() {
-                o_Color = vec4(v_Position, 1.0);
+                o_Color = v_Color;
             }
         )";
 
@@ -68,13 +72,13 @@ namespace swheel {
         Event event;
         const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
 
-        float vertices[3 * 3] = {
-            -0.8f, 0.5f, 0.0f,
-            0.2f, 0.5f, 0.0f,
-            -0.3f,  -0.5f, 0.0f
+        float vertices[3 * 7] = {
+            -0.8f,  -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,
+            0.2f,  -0.5f, 0.0f,      0.0f, 1.0f, 0.0f, 1.0f,
+            -0.3f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 
         };
         unsigned int indecies[3] = { 0, 1, 2 };
-        MeshData meshData(commonLayouts::Position::Layout(), vertices, 3, indecies, 3);
+        MeshData meshData(commonLayouts::PositionColor::Layout(), vertices, 3, indecies, 3);
         m_sharedData.meshData = &meshData;
         std::unique_ptr<Mesh> mesh = graphicsBackend.CreateMeshInstance(meshData);
         mesh->Load();

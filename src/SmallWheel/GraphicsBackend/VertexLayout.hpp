@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SmallWheel/Core.hpp"
+#include "SmallWheel/Utils/Result.hpp"
 
 namespace swheel {
     namespace propertyUnion {
@@ -51,7 +52,7 @@ namespace swheel {
     public:
         class Iterator {
         public:
-            Iterator(uint32_t stride, char* data):
+            Iterator(uint32_t stride, std::byte* data):
                 m_stride(stride), m_ptr(data) {}
 
             T& operator*() { return *reinterpret_cast<T*>(m_ptr); }
@@ -83,13 +84,13 @@ namespace swheel {
             bool operator!=(const Iterator& other) const { return m_ptr != other.m_ptr; }
 
             private:
-                char* m_ptr;
+                std::byte* m_ptr;
                 uint32_t m_stride;
         };
 
     public:
         VertexPropertyView(uint32_t stride, uint32_t count, void* data):
-            m_stride(stride), m_count(count), m_data(reinterpret_cast<char*>(data)) {}
+            m_stride(stride), m_count(count), m_data(reinterpret_cast<std::byte*>(data)) {}
         
         T& operator[](std::size_t index) { return *reinterpret_cast<T*>(m_data + (index * m_stride)); }
         const T& operator[](std::size_t index) const { return *reinterpret_cast<T*>(m_data + (index * m_stride)); }
@@ -99,7 +100,7 @@ namespace swheel {
         Iterator end()   const { return Iterator(m_stride, m_data + (m_count * m_stride)); }
 
     private:
-        char* m_data;
+        std::byte* m_data;
         uint32_t m_count;
         uint32_t m_stride;
     };
@@ -110,6 +111,7 @@ namespace swheel {
     struct VertexProperty {
         uint32_t offset;
         VertexPropertyType type;
+        std::string name;
     };
 
     struct InitializerVertexProperty {
@@ -118,19 +120,26 @@ namespace swheel {
     };
 
     class VertexLayout {
+    private:
+        enum class LayoutError {
+            PROPERTY_NOT_FOUND
+        };
     public:
         VertexLayout(const std::initializer_list<InitializerVertexProperty>& elements);
 
         const VertexProperty& GetProperty(const std::string& propertyName) const;
         uint32_t GetStride() const { return m_stride; }
 
-        std::map<std::string, VertexProperty>::iterator begin() { return m_properties.begin(); }
-        std::map<std::string, VertexProperty>::const_iterator begin() const { return m_properties.begin(); }
+        std::vector<VertexProperty>::iterator begin() { return m_properties.begin(); }
+        std::vector<VertexProperty>::const_iterator begin() const { return m_properties.begin(); }
 
-        std::map<std::string, VertexProperty>::iterator end() { return m_properties.end(); }
-        std::map<std::string, VertexProperty>::const_iterator end() const { return m_properties.end(); }
+        std::vector<VertexProperty>::iterator end() { return m_properties.end(); }
+        std::vector<VertexProperty>::const_iterator end() const { return m_properties.end(); }
     private:
-        std::map<std::string, VertexProperty> m_properties;
+        Result<const VertexProperty*, LayoutError> GetPropertyImpl(const std::string& propertyName) const;
+
+    private:
+        std::vector<VertexProperty> m_properties;
         uint32_t m_stride = 0;
     };
 }

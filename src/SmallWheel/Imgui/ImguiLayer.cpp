@@ -45,15 +45,33 @@ namespace swheel {
             "vertex 2 pos"
         };
 
+        static std::vector<std::string> colorLabels = {
+            "vertex 0 col",
+            "vertex 1 col",
+            "vertex 2 col"
+        };
+
         if (ImGui::CollapsingHeader("Mesh editor:", true)) {
             if (m_sharedData.meshData) {
-                VertexPropertyView<propertyUnion::Triple> vertexPositions =
-                    commonLayouts::Position::GetPosition(*m_sharedData.meshData);
-                uint32_t currentVertexindex = 0;
-                for (auto& vertexPosition : vertexPositions) {
-                    // std::string label("vertex " + std::to_string(currentVertexindex) + " position");
-                    ImGui::SliderFloat3(labels[currentVertexindex].c_str(), &vertexPosition.x, -2.0, 2.0);
-                    ++currentVertexindex;
+                {
+                    VertexPropertyView<propertyUnion::Triple> vertexPositions =
+                        commonLayouts::PositionColor::GetPosition(*m_sharedData.meshData);
+                    uint32_t currentVertexindex = 0;
+                    for (auto& vertexPosition : vertexPositions) {
+                        // std::string label("vertex " + std::to_string(currentVertexindex) + " position");
+                        ImGui::SliderFloat3(labels[currentVertexindex].c_str(), &vertexPosition.x, -2.0, 2.0);
+                        ++currentVertexindex;
+                    }
+                }
+
+                {
+                    uint32_t currentVertexindex = 0;
+                    VertexPropertyView<propertyUnion::Quad> vertexColors =
+                        commonLayouts::PositionColor::GetColor(*m_sharedData.meshData);
+                    for (auto& vertexColor : vertexColors) {
+                        ImGui::ColorEdit4(colorLabels[currentVertexindex].c_str(), &vertexColor.r);
+                        ++currentVertexindex;
+                    }
                 }
             }
         }

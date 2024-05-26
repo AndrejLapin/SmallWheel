@@ -30,15 +30,25 @@ namespace swheel {
         std::vector<InitializerVertexProperty> initializerElements(elements);
 
         for (auto& element : elements) {
-            const auto& result = m_properties.try_emplace(element.name, VertexProperty{m_stride, element.type});
-            SW_ASSERT_LOG(result.second, "Value with name: " + element.name + " already exists!");
+            Result<const VertexProperty*, VertexLayout::LayoutError> result = GetPropertyImpl(element.name);
+            SW_ASSERT_LOG(!result.isValid(), "Value with name: " + element.name + " already exists!");
+            m_properties.emplace_back(VertexProperty{m_stride, element.type, element.name});
             m_stride += VertexDataTypeSize(element.type);
         }
     }
 
-    const VertexProperty& VertexLayout::GetProperty(const std::string& elementName) const {
-        auto it = m_properties.find(elementName);
-        SW_ASSERT_LOG(it != m_properties.end(), "Element with name: " + elementName + " does not exist in the layout.");
-        return it->second;
+    const VertexProperty& VertexLayout::GetProperty(const std::string& propertyName) const {
+        Result<const VertexProperty*, VertexLayout::LayoutError> result = GetPropertyImpl(propertyName);
+        SW_ASSERT_LOG(result.isValid(), "Element with name: " + propertyName + " does not exist in the layout.");
+        return *result.getResult();
+    }
+
+    Result<const VertexProperty*, VertexLayout::LayoutError> VertexLayout::GetPropertyImpl(const std::string& propertyName) const {
+        for (auto& it : m_properties) {
+            if (it.name == propertyName) {
+                return Result<const VertexProperty*, VertexLayout::LayoutError>::valid(&it);
+            }
+        }
+        return Result<const VertexProperty*, VertexLayout::LayoutError>::error(LayoutError::PROPERTY_NOT_FOUND);
     }
 }
