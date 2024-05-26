@@ -6,7 +6,6 @@
 #include "Shader.hpp"
 #include "RendererAPIs.hpp"
 #include "Renderers/SimpleMeshRenderer.hpp"
-#include "SmallWheel/Window.hpp"
 
 namespace swheel {
     class GraphicsBackend {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGLWindow.hpp"
+#include "SmallWheel/Application.hpp"
 #include "SmallWheel/Imgui/ImguiLayerImpl.h"
 
 namespace swheel {

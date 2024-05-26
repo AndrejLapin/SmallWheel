@@ -31,7 +31,7 @@ namespace swheel {
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
 
         const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
-        m_window->PushOverlay<ImguiLayer>("Imgui");
+        m_window->PushOverlay<ImguiLayer>(m_sharedData, "Imgui");
 
         std::string vertexSrc = R"(
             #version 460 core
@@ -75,11 +75,14 @@ namespace swheel {
         };
         unsigned int indecies[3] = { 0, 1, 2 };
         MeshData meshData(commonLayouts::Position::Layout(), vertices, 3, indecies, 3);
+        m_sharedData.meshData = &meshData;
         std::unique_ptr<Mesh> mesh = graphicsBackend.CreateMeshInstance(meshData);
         mesh->Load();
 
         do {
             graphicsBackend.Clear();
+            mesh->Unload();
+            mesh->Load();
             graphicsBackend.GetSimpleRenderer().DrawMesh(*m_shader, *mesh);
             m_window->OnUpdate();
 

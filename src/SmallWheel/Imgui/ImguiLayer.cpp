@@ -1,15 +1,21 @@
+#include "imgui.h"
 #include "swpch.hpp"
 #include "ImguiLayer.hpp"
 
 #include "imgui/backends/imgui_impl_sdl2.h"
 
 #include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
+#include "SmallWheel/GraphicsBackend/CommonVertexLayouts.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLWindow.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLImguiLayerImpl.hpp"
+#include <cstdint>
+#include <string>
+#include <vector>
 
 namespace swheel {
-    ImguiLayer::ImguiLayer(const Window& owner, const std::string& name): 
-        Layer(owner, name) {
+    ImguiLayer::ImguiLayer(const Window& owner, Application::SharedData& sharedData, const std::string& name): 
+        Layer(owner, name),
+        m_sharedData(sharedData) {
         RendererAPI apiType = owner.GetGraphicsBackend().GetAPIType();
         switch (apiType) {
         case RendererAPI::OpenGL: {
@@ -33,7 +39,27 @@ namespace swheel {
     void ImguiLayer::OnUpdate() {
         m_layerImpl->ImguiFrameBegin();
 
-        m_layerImpl->OnUpdate();
+        static std::vector<std::string> labels = {
+            "vertex 0 pos",
+            "vertex 1 pos",
+            "vertex 2 pos"
+        };
+
+        if (ImGui::CollapsingHeader("Mesh editor:", true)) {
+            if (m_sharedData.meshData) {
+                VertexPropertyView<propertyUnion::Triple> vertexPositions =
+                    commonLayouts::Position::GetPosition(*m_sharedData.meshData);
+                uint32_t currentVertexindex = 0;
+                for (auto& vertexPosition : vertexPositions) {
+                    // std::string label("vertex " + std::to_string(currentVertexindex) + " position");
+                    ImGui::SliderFloat3(labels[currentVertexindex].c_str(), &vertexPosition.x, -2.0, 2.0);
+                    ++currentVertexindex;
+                }
+            }
+        }
+
+        // static bool show = true;
+        // ImGui::ShowDemoWindow(&show);
 
         m_layerImpl->ImguiFrameEnd();
     }

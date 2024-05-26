@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SmallWheel/Layering/Layer.hpp"
+#include "SmallWheel/Application.hpp"
 
 namespace swheel {
     class ImguiLayerImpl;
@@ -8,7 +9,7 @@ namespace swheel {
 
     class ImguiLayer : public Layer {
     public:
-        ImguiLayer(const Window& owner, const std::string& name = "Layer");
+        ImguiLayer(const Window& owner, Application::SharedData& sharedData, const std::string& name = "Layer");
         ~ImguiLayer();
 
         void OnAttach() override;
@@ -17,6 +18,7 @@ namespace swheel {
         void OnEvent(Event& event) override;
 
     private:
+        Application::SharedData& m_sharedData;
         std::unique_ptr<ImguiLayerImpl> m_layerImpl;
     };
 }
