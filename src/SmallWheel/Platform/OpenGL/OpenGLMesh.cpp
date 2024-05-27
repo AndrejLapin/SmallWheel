@@ -18,7 +18,7 @@ namespace swheel {
         const VertexLayout& layout = m_meshData.GetLayout();
 
         // we could create vertex and index buffer here at the same time
-        GLCall(glCreateBuffers(1, &m_vertexBuffer));
+        GLCall(glGenBuffers(1, &m_vertexBuffer));
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer));
         // what is the static draw for? read into this
         GLCall(glBufferData(GL_ARRAY_BUFFER, m_meshData.GetVertexCount() * layout.GetStride(), m_meshData.GetData(), GL_STATIC_DRAW));
@@ -34,7 +34,7 @@ namespace swheel {
             }
         }
 
-        GLCall(glCreateBuffers(1, &m_indexBuffer));
+        GLCall(glGenBuffers(1, &m_indexBuffer));
         GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer));
         GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_meshData.GetIndexCount() * sizeof(uint32_t), m_meshData.GetIndices(), GL_STATIC_DRAW));
 

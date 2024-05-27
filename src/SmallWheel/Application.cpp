@@ -22,10 +22,10 @@ namespace swheel {
         // SDL_GL_LoadLibrary(nullptr);
         // std::cout << "SDL application created\n";
 
-        // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
-        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
         // Nicer way to create Window (same like it was with renderer)
         m_window = std::make_unique<OpenGLWindow>(title, width, height);
@@ -34,7 +34,7 @@ namespace swheel {
         m_window->PushOverlay<ImguiLayer>(m_sharedData, "Imgui");
 
         std::string vertexSrc = R"(
-            #version 460 core
+            #version 410 core
 
             layout(location = 0) in vec3 a_Position;
             layout(location = 1) in vec4 a_Color;
@@ -50,7 +50,7 @@ namespace swheel {
         )";
 
         std::string fragmentSrc = R"(
-            #version 460 core
+            #version 410 core
 
             layout(location = 0) out vec4 o_Color;
 

@@ -27,7 +27,7 @@ namespace swheel {
         }
 
         ImGui_ImplSDL2_InitForOpenGL(m_ownerWindow.GetSDLWindow(), m_ownerWindow.GetSDLGLContext());
-        ImGui_ImplOpenGL3_Init("#version 460");
+        ImGui_ImplOpenGL3_Init("#version 410");
     }
 
     void OpenGLImguiLayerImpl::OnDetach() {
@@ -58,7 +58,6 @@ namespace swheel {
         {
             SDL_Window* currentWindow = SDL_GL_GetCurrentWindow();
             SDL_GLContext currentContext = SDL_GL_GetCurrentContext();
-            // TODO: add implementation for mac
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             SDL_GL_MakeCurrent(currentWindow, currentContext);

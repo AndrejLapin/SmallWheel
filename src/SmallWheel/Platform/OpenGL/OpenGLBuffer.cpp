@@ -6,7 +6,7 @@
 
 namespace swheel {
     OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indecies, uint32_t count): m_count(count) {
-        GLCall(glCreateBuffers(1, &m_rendererId));
+        GLCall(glGenBuffers(1, &m_rendererId));
         GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererId));
         GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indecies, GL_STATIC_DRAW));
     }
@@ -24,7 +24,7 @@ namespace swheel {
     }
 
     OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
-        GLCall(glCreateBuffers(1, &m_rendererId));
+        GLCall(glGenBuffers(1, &m_rendererId));
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_rendererId));
         GLCall(glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW));
     }
