@@ -10,6 +10,7 @@
 #include <libloaderapi.h>
 #include <minwindef.h>
 #include <winnt.h>
+#include <sstream>
 
 namespace swheel {
     OpenGLShader::OpenGLShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath):
@@ -111,27 +112,17 @@ namespace swheel {
     }
 
     Result<GLuint, Shader::ShaderError> OpenGLShader::CompileShader(const std::filesystem::path& shaderPath, GLenum type) {
-        std::ifstream file(shaderPath);
-        std::cout << "File is open: " << file.is_open() << '\n';
+        std::ifstream file(shaderPath, std::ifstream::ate | std::ifstream::binary);
         SW_ASSERT_LOG(file.is_open(), "Unable to open file: " + shaderPath.string());
-        std::streamsize size = file.tellg();
-        std::cout << "Shader size: " << size << '\n';
-        file.seekg(0, std::ios::beg);
-        auto buffer = std::make_unique<char>(size);
-        file.read(buffer.get(), size);
-
-        for (int i = 0; i < size; i++) {
-            buffer.get()[i] = i + 'a';
-        }
-
-        for (int i = 0; i < size; i++) {
-            std::cout << buffer.get()[i];
-        }
-        std::cout << '\n';
+        size_t size = file.tellg();
+        std::string buffer(size, '\0');
+        file.seekg(0);
+        file.read(buffer.data(), size);
+        file.close();
 
         GLCall(GLuint shader = glCreateShader(type));
 
-        const GLchar* source = buffer.get();
+        const GLchar* source = buffer.c_str();
         GLCall(glShaderSource(shader, 1, &source, 0));
         GLCall(glCompileShader(shader));
 
