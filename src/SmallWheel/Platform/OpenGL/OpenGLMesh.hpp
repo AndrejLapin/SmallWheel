@@ -12,8 +12,9 @@ namespace swheel {
 
         void Load() override;
         void Unload() override;
-        void Bind() override;
-        void Unbind() override;
+        void Reload() override;
+        void Bind() const override;
+        void Unbind() const override;
         bool IsLoaded() override { return m_loaded; }
     
     private:

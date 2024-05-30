@@ -13,6 +13,7 @@
 #include "GraphicsBackend/Renderers/SimpleMeshRenderer.hpp"
 #include "GraphicsBackend/Mesh.hpp"
 #include "GraphicsBackend/MeshData.hpp"
+#include "GraphicsBackend/ShaderRegistry.hpp"
 
 namespace swheel {
 
@@ -61,8 +62,8 @@ namespace swheel {
                 o_Color = v_Color;
             }
         )";
-
-        m_shader = graphicsBackend.CreateShader(vertexSrc, fragmentSrc);
+        m_shader = graphicsBackend.CreateShader(shaderRegistry::s_colorOutVertexShader, shaderRegistry::s_colorInFragmentShader);
+        m_shader->Load();
     }
 
     Application::~Application() {
@@ -75,7 +76,7 @@ namespace swheel {
         float vertices[3 * 7] = {
             -0.8f,  -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,
             0.2f,  -0.5f, 0.0f,      0.0f, 1.0f, 0.0f, 1.0f,
-            -0.3f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 
+            -0.3f, 0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f, 
         };
         unsigned int indecies[3] = { 0, 1, 2 };
         MeshData meshData(commonLayouts::PositionColor::Layout(), vertices, 3, indecies, 3);
@@ -85,8 +86,7 @@ namespace swheel {
 
         do {
             graphicsBackend.Clear();
-            mesh->Unload();
-            mesh->Load();
+            mesh->Reload();
             graphicsBackend.GetSimpleRenderer().DrawMesh(*m_shader, *mesh);
             m_window->OnUpdate();
 

@@ -8,6 +8,7 @@
 #include "SmallWheel/Platform/OpenGL/OpenGLBackend.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLShader.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLMesh.hpp"
+#include <memory>
 
 namespace swheel {
     // std::unique_ptr<GraphicsBackend> GraphicsBackend::CreateBackend(RendererAPI type) {
@@ -16,6 +17,13 @@ namespace swheel {
     //     }
     //     SW_ASSERT(false);
     // }
+
+    std::unique_ptr<Shader> GraphicsBackend::CreateShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath) const {
+        switch (m_type) {
+        case RendererAPI::OpenGL: return std::make_unique<OpenGLShader>(vertexPath, fragmentPath);
+        }
+        SW_ASSERT(false);
+    }
 
     std::unique_ptr<Shader> GraphicsBackend::CreateShader(const std::string& vetexSrc, const std::string& fragmentSrc) const {
         switch (m_type) {

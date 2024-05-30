@@ -6,6 +6,8 @@
 #include "Shader.hpp"
 #include "RendererAPIs.hpp"
 #include "Renderers/SimpleMeshRenderer.hpp"
+#include <filesystem>
+#include <memory>
 
 namespace swheel {
     class GraphicsBackend {
@@ -17,7 +19,7 @@ namespace swheel {
 
         //static std::unique_ptr<GraphicsBackend> CreateBackend(RendererAPI type);
 
-        // Maybe this should be managed by the shader itself?
+        std::unique_ptr<Shader> CreateShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath) const;
         std::unique_ptr<Shader> CreateShader(const std::string& vetexSrc, const std::string& fragmentSrc) const;
         std::unique_ptr<IndexBuffer> CreateIndexBuffer(uint32_t* indecies, uint32_t size) const;
         std::unique_ptr<VertexBuffer> CreateVertexBuffer(float* vertices, uint32_t size) const;

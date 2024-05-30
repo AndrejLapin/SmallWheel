@@ -50,12 +50,17 @@ namespace swheel {
         GLCall(glDeleteBuffers(1, &m_indexBuffer));
     }
 
-    void OpenGLMesh::Bind() {
+    void OpenGLMesh::Reload() {
+        Unload();
+        Load();
+    }
+
+    void OpenGLMesh::Bind() const {
         SW_ASSERT_LOG(m_loaded, "Mesh not loaded!");
         GLCall(glBindVertexArray(m_vertexArray));
     }
 
-    void OpenGLMesh::Unbind() {
+    void OpenGLMesh::Unbind() const {
         SW_ASSERT_LOG(m_loaded, "Mesh not loaded!");
         GLCall(glBindVertexArray(0));
     }

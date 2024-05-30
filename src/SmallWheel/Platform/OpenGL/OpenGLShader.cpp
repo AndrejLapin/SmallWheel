@@ -1,10 +1,21 @@
+#include "SmallWheel/Core.hpp"
 #include "swpch.hpp"
 #include "OpenGLShader.hpp"
 
 #include "OpenGLBackend.hpp"
 #include "SmallWheel/GraphicsBackend/Shader.hpp"
 
+#include <cstddef>
+#include <ios>
+#include <libloaderapi.h>
+#include <minwindef.h>
+#include <winnt.h>
+
 namespace swheel {
+    OpenGLShader::OpenGLShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath):
+    m_vertexPath(vertexPath), m_fragmentPath(fragmentPath) {
+    }
+
     OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
         GLuint vertexShader;
         GLuint fragmentShader;
@@ -97,6 +108,99 @@ namespace swheel {
             return Result<GLuint, ShaderError>::error(ShaderError::COMPILATION_FAILED);
         }
         return Result<GLuint, ShaderError>::valid(shader);
+    }
+
+    Result<GLuint, Shader::ShaderError> OpenGLShader::CompileShader(const std::filesystem::path& shaderPath, GLenum type) {
+        std::ifstream file(shaderPath);
+        std::cout << "File is open: " << file.is_open() << '\n';
+        SW_ASSERT_LOG(file.is_open(), "Unable to open file: " + shaderPath.string());
+        std::streamsize size = file.tellg();
+        std::cout << "Shader size: " << size << '\n';
+        file.seekg(0, std::ios::beg);
+        auto buffer = std::make_unique<char>(size);
+        file.read(buffer.get(), size);
+
+        for (int i = 0; i < size; i++) {
+            buffer.get()[i] = i + 'a';
+        }
+
+        for (int i = 0; i < size; i++) {
+            std::cout << buffer.get()[i];
+        }
+        std::cout << '\n';
+
+        GLCall(GLuint shader = glCreateShader(type));
+
+        const GLchar* source = buffer.get();
+        GLCall(glShaderSource(shader, 1, &source, 0));
+        GLCall(glCompileShader(shader));
+
+        GLint isCompiled = 0;
+        GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled));
+        if (isCompiled == GL_FALSE) {
+            GLint maxLength = 0;
+            GLCall(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength));
+
+            if (maxLength > 0) {
+                auto infoLog = std::make_unique<GLchar[]>(maxLength);
+                GLCall(glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]));
+
+                GLCall(glDeleteShader(shader));
+
+                std::cerr << "Shader compliation failure: " << infoLog.get() << '\n';
+            } else {
+                std::cerr << "Unknown shader link failure!\n";
+            }
+
+            SW_ASSERT(false);
+            return Result<GLuint, ShaderError>::error(ShaderError::COMPILATION_FAILED);
+        }
+        return Result<GLuint, ShaderError>::valid(shader);
+    }
+
+    void OpenGLShader::Load() {
+        GLuint vertexShader;
+        GLuint fragmentShader;
+        {
+            Result<GLuint, ShaderError> vertexShaderResult = CompileShader(m_vertexPath, GL_VERTEX_SHADER);
+            Result<GLuint, ShaderError> fragmentShaderResult = CompileShader(m_fragmentPath, GL_FRAGMENT_SHADER);
+
+            if (!vertexShaderResult.isValid() || !fragmentShaderResult.isValid()) {
+                if (vertexShaderResult.isValid()) {
+                    GLCall(glDeleteShader(vertexShaderResult.getResult()));
+                } else if (fragmentShaderResult.isValid()) {
+                    GLCall(glDeleteShader(fragmentShaderResult.getResult()));
+                }
+                return;
+            }
+            vertexShader = vertexShaderResult.getResult();
+            fragmentShader = fragmentShaderResult.getResult();
+        }
+
+        m_rendererId = glCreateProgram();
+        ShaderError error = LinkShaders({vertexShader, fragmentShader});
+        if (error != ShaderError::NONE) {
+            GLCall(glDeleteProgram(m_rendererId));
+            GLCall(glDeleteProgram(vertexShader));
+            GLCall(glDeleteProgram(fragmentShader));
+        }
+
+        // Always detach shaders after a successful link.
+        GLCall(glDetachShader(m_rendererId, vertexShader));
+        GLCall(glDetachShader(m_rendererId, fragmentShader));
+        GLCall(glDeleteShader(vertexShader));
+        GLCall(glDeleteShader(fragmentShader));
+    }
+
+    void OpenGLShader::Unload() {
+        GLCall(glDeleteProgram(m_rendererId));
+    }
+
+    void OpenGLShader::Reload() {
+        // we should detect what change occured to which shader
+        // and only reload that source
+        Load();
+        Unload();
     }
 
     void OpenGLShader::Bind() const {

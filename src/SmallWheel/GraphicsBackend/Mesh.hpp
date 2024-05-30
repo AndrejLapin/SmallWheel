@@ -10,8 +10,9 @@ namespace swheel {
 
         virtual void Load() = 0;
         virtual void Unload() = 0;
-        virtual void Bind() = 0;
-        virtual void Unbind() = 0;
+        virtual void Reload() = 0;
+        virtual void Bind() const = 0;
+        virtual void Unbind() const = 0;
         virtual bool IsLoaded() = 0;
         const MeshData& GetData() const { return m_meshData; }
 

@@ -11,6 +11,9 @@ namespace swheel {
 
         virtual ~Shader() {}
 
+        virtual void Load() = 0;
+        virtual void Unload() = 0;
+        virtual void Reload() = 0;
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
     };
