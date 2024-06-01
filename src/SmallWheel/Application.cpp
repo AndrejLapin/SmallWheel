@@ -1,3 +1,4 @@
+#include "SmallWheel/GraphicsBackend/RendererAPIs.hpp"
 #include "swpch.hpp"
 #include "Application.hpp"
 
@@ -28,8 +29,9 @@ namespace swheel {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-        // Nicer way to create Window (same like it was with renderer)
-        m_window = std::make_unique<OpenGLWindow>(title, width, height);
+        m_backend = GraphicsBackend::CreateBackend(RendererAPI::OpenGL);
+
+        m_window = m_backend->CreateWindow(title, width, height);
 
         const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
         m_window->PushOverlay<ImguiLayer>(m_sharedData, "Imgui");

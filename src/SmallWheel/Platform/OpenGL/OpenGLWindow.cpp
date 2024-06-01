@@ -8,12 +8,12 @@
 #include "SmallWheel/Event.hpp"
 
 namespace swheel {
-    OpenGLWindow::OpenGLWindow(const std::string& title, int width, int height):
+    OpenGLWindow::OpenGLWindow(const GraphicsBackend& parentBackend, const std::string& title, int width, int height):
+    Window(parentBackend),
     m_title(title), m_width(width), m_height(height) {
         if (!Init()) {
             m_closed = true;
         }
-        m_backend = std::make_unique<OpenGLBackend>();
     }
 
     OpenGLWindow::~OpenGLWindow() {

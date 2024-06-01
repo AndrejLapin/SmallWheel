@@ -3,6 +3,7 @@
 #include "SDLLifeTime.hpp"
 #include "GraphicsBackend/MeshData.hpp"
 #include "SmallWheel/GraphicsBackend/MeshData.hpp"
+#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 
 namespace swheel {
     class Window;
@@ -24,6 +25,7 @@ namespace swheel {
 
     private:
         SDLLifetime m_sdlLifetime;
+        std::unique_ptr<GraphicsBackend> m_backend;
         std::unique_ptr<Window> m_window;
         std::unique_ptr<Shader> m_shader;
         SharedData m_sharedData;

@@ -7,9 +7,6 @@
 
 #include <cstddef>
 #include <ios>
-#include <libloaderapi.h>
-#include <minwindef.h>
-#include <winnt.h>
 #include <sstream>
 
 namespace swheel {

@@ -4,7 +4,7 @@
 #include "glad/gl.h"
 #include "SDL_video.h"
 #include "SmallWheel/SDLLifetime.hpp"
-
+#include "SmallWheel/Window.hpp"
 namespace swheel {
     void GLClearError() {
         uint32_t errorsCleared = 0;
@@ -19,18 +19,25 @@ namespace swheel {
         return true;
     }
 
+    OpenGLBackend::OpenGLBackend(): GraphicsBackend(RendererAPI::OpenGL) {}
+
+    OpenGLBackend::~OpenGLBackend() {}
+
     void OpenGLBackend::Clear() const {
         GLCall(glClearColor(0.2f, 0.3f, 0.5f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
     }
 
-    OpenGLBackend::OpenGLBackend(): GraphicsBackend(RendererAPI::OpenGL) {
-        InitGlad();
+    std::unique_ptr<Window> OpenGLBackend::CreateWindow(const std::string& title, int width, int height) const {
+        std::unique_ptr<Window> window = GraphicsBackend::CreateWindow(title, width, height);
+        if(!m_gladInitalised) {
+            InitGlad();
+            m_gladInitalised = true;
+        }
+        return window;
     }
 
-    OpenGLBackend::~OpenGLBackend() {}
-
-    void OpenGLBackend::InitGlad() {
+    void OpenGLBackend::InitGlad() const {
         int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
         if (version == 0) {
             SDLLifetime::PrintSDLErrors();

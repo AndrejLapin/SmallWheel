@@ -24,7 +24,14 @@ namespace swheel {
         ~OpenGLBackend();
 
         void Clear() const override;
+
+        std::unique_ptr<Window> CreateWindow(const std::string& title, int width, int height) const override;
     private:
-        void InitGlad();
+        void InitGlad() const;
+
+    private:
+        // should be mutable while CreateWindow is const
+        // if CreateWindow would no longer be const, remove mutable
+        mutable bool m_gladInitalised = false;
     };
 }

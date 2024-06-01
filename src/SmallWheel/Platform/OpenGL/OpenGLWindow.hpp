@@ -7,13 +7,12 @@
 namespace swheel {
     class OpenGLWindow : public Window {
     public:
-        OpenGLWindow(const std::string& title, int width, int height);
+        OpenGLWindow(const GraphicsBackend& parentBackend, const std::string& title, int width, int height);
         ~OpenGLWindow() override;
 
         void OnEvent(Event& event) override;
         void OnUpdate() override;
         bool IsClosed() const override { return m_closed; }
-        GraphicsBackend& GetGraphicsBackend() const override { return *m_backend.get();}
 
         int GetWidth() const { return m_width; }
         int GetHeight() const { return m_height; }
@@ -29,7 +28,6 @@ namespace swheel {
         int m_width;
         int m_height;
 
-        std::unique_ptr<OpenGLBackend> m_backend;
         LayerStack m_layerStack;
 
         SDL_Window* m_window = nullptr;
