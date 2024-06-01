@@ -32,13 +32,6 @@ namespace swheel {
         SW_ASSERT(false);
     }
 
-    std::unique_ptr<Shader> GraphicsBackend::CreateShader(const std::string& vetexSrc, const std::string& fragmentSrc) const {
-        switch (m_type) {
-        case RendererAPI::OpenGL: return std::make_unique<OpenGLShader>(vetexSrc, fragmentSrc);
-        }
-        SW_ASSERT(false);
-    }
-
     std::unique_ptr<IndexBuffer> GraphicsBackend::CreateIndexBuffer(uint32_t* indecies, uint32_t size) const {
         switch (m_type) {
         case RendererAPI::OpenGL: return std::make_unique<OpenGLIndexBuffer>(indecies, size);

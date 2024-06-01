@@ -23,7 +23,6 @@ namespace swheel {
 
         virtual std::unique_ptr<Window> CreateWindow(const std::string& title, int width, int height) const;
         virtual std::unique_ptr<Shader> CreateShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath) const;
-        virtual std::unique_ptr<Shader> CreateShader(const std::string& vetexSrc, const std::string& fragmentSrc) const;
         virtual std::unique_ptr<IndexBuffer> CreateIndexBuffer(uint32_t* indecies, uint32_t size) const;
         virtual std::unique_ptr<VertexBuffer> CreateVertexBuffer(float* vertices, uint32_t size) const;
         virtual std::unique_ptr<Mesh> CreateMeshInstance(const MeshData& meshData) const;

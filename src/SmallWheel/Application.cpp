@@ -20,14 +20,6 @@ namespace swheel {
 
     Application::Application(const std::string& title, int width, int height) {
         m_sdlLifetime.Init();
-        // TODO: move to renderer if we even need this
-        // SDL_GL_LoadLibrary(nullptr);
-        // std::cout << "SDL application created\n";
-
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
         m_backend = GraphicsBackend::CreateBackend(RendererAPI::OpenGL);
 
@@ -35,35 +27,6 @@ namespace swheel {
 
         const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
         m_window->PushOverlay<ImguiLayer>(m_sharedData, "Imgui");
-
-        std::string vertexSrc = R"(
-            #version 410 core
-
-            layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
-
-            out vec3 v_Position;
-            out vec4 v_Color;
-
-            void main() {
-                v_Position = a_Position + 0.5;
-                v_Color = a_Color;
-                gl_Position = vec4(a_Position, 1.0);
-            }
-        )";
-
-        std::string fragmentSrc = R"(
-            #version 410 core
-
-            layout(location = 0) out vec4 o_Color;
-
-            in vec3 v_Position;
-            in vec4 v_Color;
-
-            void main() {
-                o_Color = v_Color;
-            }
-        )";
         m_shader = graphicsBackend.CreateShader(shaderRegistry::s_colorOutVertexShader, shaderRegistry::s_colorInFragmentShader);
         m_shader->Load();
     }
@@ -73,7 +36,6 @@ namespace swheel {
 
     void Application::Run() {
         Event event;
-        const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
 
         float vertices[3 * 7] = {
             -0.8f,  -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,
@@ -83,13 +45,13 @@ namespace swheel {
         unsigned int indecies[3] = { 0, 1, 2 };
         MeshData meshData(commonLayouts::PositionColor::Layout(), vertices, 3, indecies, 3);
         m_sharedData.meshData = &meshData;
-        std::unique_ptr<Mesh> mesh = graphicsBackend.CreateMeshInstance(meshData);
+        std::unique_ptr<Mesh> mesh = m_backend->CreateMeshInstance(meshData);
         mesh->Load();
 
         do {
-            graphicsBackend.Clear();
+            m_backend->Clear();
             mesh->Reload();
-            graphicsBackend.GetSimpleRenderer().DrawMesh(*m_shader, *mesh);
+            m_backend->GetSimpleRenderer().DrawMesh(*m_shader, *mesh);
             m_window->OnUpdate();
 
             while(event.PollNextEvent()) {

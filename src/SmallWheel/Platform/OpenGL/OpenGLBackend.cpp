@@ -5,6 +5,7 @@
 #include "SDL_video.h"
 #include "SmallWheel/SDLLifetime.hpp"
 #include "SmallWheel/Window.hpp"
+
 namespace swheel {
     void GLClearError() {
         uint32_t errorsCleared = 0;
@@ -19,7 +20,12 @@ namespace swheel {
         return true;
     }
 
-    OpenGLBackend::OpenGLBackend(): GraphicsBackend(RendererAPI::OpenGL) {}
+    OpenGLBackend::OpenGLBackend(): GraphicsBackend(RendererAPI::OpenGL) {
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    }
 
     OpenGLBackend::~OpenGLBackend() {}
 

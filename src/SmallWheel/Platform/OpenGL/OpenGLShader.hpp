@@ -9,7 +9,6 @@ namespace swheel {
     class OpenGLShader : public Shader {
     public:
         OpenGLShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath);
-        OpenGLShader(const std::string& vetexSrc, const std::string& fragmentSrc);
         ~OpenGLShader();
 
         void Load() override;
@@ -21,7 +20,6 @@ namespace swheel {
     private:
         ShaderError LinkShaders(const std::vector<GLuint>& shaders);
         Result<GLuint, ShaderError> CompileShader(const std::string& shaderSource, GLenum type);
-        Result<GLuint, ShaderError> CompileShader(const std::filesystem::path& shaderPath, GLenum type);
 
     private:
         std::filesystem::path m_vertexPath, m_fragmentPath;
