@@ -7,6 +7,7 @@ namespace swheel {
     class Mesh {
     public:
         Mesh(const MeshData& meshData): m_meshData(meshData) {}
+        virtual ~Mesh() {}
 
         virtual void Load() = 0;
         virtual void Unload() = 0;

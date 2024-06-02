@@ -3,7 +3,6 @@
 #include "glad/gl.h"
 #include "SmallWheel/GraphicsBackend/Shader.hpp"
 #include "SmallWheel/Utils/Result.hpp"
-#include <filesystem>
 
 namespace swheel {
     class OpenGLShader : public Shader {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SDLLifeTime.hpp"
+#include "SDLLifetime.hpp"
 #include "GraphicsBackend/MeshData.hpp"
 #include "SmallWheel/GraphicsBackend/MeshData.hpp"
 #include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"

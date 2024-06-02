@@ -47,7 +47,7 @@ namespace swheel {
 
     // Has yet to be tested
     // Maybe unit tests should be created?
-    template<class T>
+    template<typename T>
     class VertexPropertyView {
     public:
         class Iterator {
