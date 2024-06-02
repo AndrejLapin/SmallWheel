@@ -6,10 +6,10 @@
 namespace  swheel {
     class Layer {
     public:
-        Layer(const Window& owner, const std::string& name = "Layer"): m_debugName(name) {}
+        Layer(const std::string& name = "Layer"): m_debugName(name) {}
         virtual ~Layer() {}
 
-        virtual void OnAttach() {}
+        virtual void OnAttach(const Window* window) {}
         virtual void OnDetach() {}
         virtual void OnUpdate() {}
         virtual void OnEvent(Event& event) {}

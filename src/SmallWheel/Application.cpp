@@ -1,12 +1,12 @@
-#include "SmallWheel/GraphicsBackend/RendererAPIs.hpp"
 #include "swpch.hpp"
 #include "Application.hpp"
 
-#include "glad/gl.h"
 #include "Event.hpp"
+#include "Imgui/ImguiLayer.hpp"
 #include "Window.hpp"
 #include "Platform/OpenGL/OpenGLWindow.hpp"
-#include "Imgui/ImguiLayer.hpp"
+#include "SmallWheel/GraphicsBackend/RendererAPIs.hpp"
+#include "Utils/RefCounted.hpp"
 #include "GraphicsBackend/Shader.hpp"
 #include "GraphicsBackend/GraphicsBackend.hpp"
 #include "GraphicsBackend/VertexLayout.hpp"
@@ -25,9 +25,10 @@ namespace swheel {
 
         m_window = m_backend->CreateWindow(title, width, height);
 
-        const GraphicsBackend& graphicsBackend = m_window->GetGraphicsBackend();
-        m_window->PushOverlay<ImguiLayer>(m_sharedData, "Imgui");
-        m_shader = graphicsBackend.CreateShader(shaderRegistry::s_colorOutVertexShader, shaderRegistry::s_colorInFragmentShader);
+        auto imguiLayer = RefCounted<ImguiLayer>::Make(m_sharedData, "Imgui");
+
+        m_window->PushOverlay(imguiLayer);
+        m_shader = m_backend->CreateShader(shaderRegistry::s_colorOutVertexShader, shaderRegistry::s_colorInFragmentShader);
         m_shader->Load();
     }
 

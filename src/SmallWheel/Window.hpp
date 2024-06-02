@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.hpp"
+#include "Utils/RefCounted.hpp"
 #include "GraphicsBackend/GraphicsBackend.hpp"
 
 namespace swheel {
@@ -15,21 +16,10 @@ namespace swheel {
         virtual void OnUpdate() = 0;
         virtual bool IsClosed() const = 0;
 
-        template<typename T, typename... Args>
-        void PushLayer(Args&&... args) {
-            PushLayer(std::move(std::make_unique<T>(*this, std::forward<Args>(args)...)));
-        }
-
-        template<typename T, typename... Args>
-        void PushOverlay(Args&&... args) {
-            PushOverlay(std::move(std::make_unique<T>(*this, std::forward<Args>(args)...)));
-        }
+        virtual void PushLayer(RefCounted<Layer> layer) = 0;
+        virtual void PushOverlay(RefCounted<Layer> layer) = 0;
 
         const GraphicsBackend& GetGraphicsBackend() const { return m_parentBackend; }
-
-    private:
-        virtual void PushLayer(std::unique_ptr<Layer> layer) = 0;
-        virtual void PushOverlay(std::unique_ptr<Layer> layer) = 0;
 
     private:
         const GraphicsBackend& m_parentBackend;

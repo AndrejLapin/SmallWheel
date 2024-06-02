@@ -1,11 +1,14 @@
 #include "swpch.hpp"
 #include "OpenGLWindow.hpp"
 
-#include "OpenGLBackend.hpp"
-#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 #include "SDL.h"
 #include "SDL_video.h"
+
+#include "OpenGLBackend.hpp"
 #include "SmallWheel/Event.hpp"
+#include "SmallWheel/Layering/Layer.hpp"
+#include "SmallWheel/Utils/RefCounted.hpp"
+#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 
 namespace swheel {
     OpenGLWindow::OpenGLWindow(const GraphicsBackend& parentBackend, const std::string& title, int width, int height):
@@ -86,13 +89,13 @@ namespace swheel {
         return true;
     }
 
-    void OpenGLWindow::PushLayer(std::unique_ptr<Layer> layer) {
-        layer->OnAttach();
-        m_layerStack.PushLayer(std::move(layer));
+    void OpenGLWindow::PushLayer(RefCounted<Layer> layer) {
+        m_layerStack.PushLayer(layer);
+        layer->OnAttach(this);
     }
 
-    void OpenGLWindow::PushOverlay(std::unique_ptr<Layer> layer) {
-        layer->OnAttach();
-        m_layerStack.PushOverlay(std::move(layer));
+    void OpenGLWindow::PushOverlay(RefCounted<Layer> layer) {
+        m_layerStack.PushOverlay(layer);
+        layer->OnAttach(this);
     }
 }

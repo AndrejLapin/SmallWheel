@@ -9,10 +9,10 @@ namespace swheel {
 
     class ImguiLayer : public Layer {
     public:
-        ImguiLayer(const Window& owner, Application::SharedData& sharedData, const std::string& name = "Layer");
+        ImguiLayer(Application::SharedData& sharedData, const std::string& name = "Layer");
         ~ImguiLayer();
 
-        void OnAttach() override;
+        void OnAttach(const Window* window) override;
         void OnDetach() override;
         void OnUpdate() override;
         void OnEvent(Event& event) override;

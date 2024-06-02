@@ -6,9 +6,7 @@
 #include "imgui/backends/imgui_impl_opengl3.h"
 
 namespace swheel {
-    OpenGLImguiLayerImpl::OpenGLImguiLayerImpl(const OpenGLWindow& ownerWindow): m_ownerWindow(ownerWindow) {}
-
-    void OpenGLImguiLayerImpl::OnAttach() {
+    OpenGLImguiLayerImpl::OpenGLImguiLayerImpl(const OpenGLWindow& ownerWindow): m_ownerWindow(ownerWindow) {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
@@ -30,7 +28,7 @@ namespace swheel {
         ImGui_ImplOpenGL3_Init("#version 410");
     }
 
-    void OpenGLImguiLayerImpl::OnDetach() {
+    OpenGLImguiLayerImpl::~OpenGLImguiLayerImpl() {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();

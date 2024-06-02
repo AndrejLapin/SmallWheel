@@ -1,39 +1,33 @@
-#include "imgui.h"
 #include "swpch.hpp"
 #include "ImguiLayer.hpp"
 
+#include "imgui.h"
 #include "imgui/backends/imgui_impl_sdl2.h"
 
+#include "SmallWheel/GraphicsBackend/RendererAPIs.hpp"
 #include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
 #include "SmallWheel/GraphicsBackend/CommonVertexLayouts.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLWindow.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLImguiLayerImpl.hpp"
-#include <cstdint>
-#include <string>
-#include <vector>
 
 namespace swheel {
-    ImguiLayer::ImguiLayer(const Window& owner, Application::SharedData& sharedData, const std::string& name): 
-        Layer(owner, name),
-        m_sharedData(sharedData) {
-        RendererAPI apiType = owner.GetGraphicsBackend().GetAPIType();
+    ImguiLayer::ImguiLayer(Application::SharedData& sharedData, const std::string& name): 
+        Layer(name),
+        m_sharedData(sharedData) {}
+
+    ImguiLayer::~ImguiLayer() {}
+
+    void ImguiLayer::OnAttach(const Window* window) {
+        RendererAPI apiType = window->GetGraphicsBackend().GetAPIType();
         switch (apiType) {
         case RendererAPI::OpenGL: {
-            m_layerImpl = std::make_unique<OpenGLImguiLayerImpl>(static_cast<const OpenGLWindow&>(owner));
+            m_layerImpl = std::make_unique<OpenGLImguiLayerImpl>(static_cast<const OpenGLWindow&>(*window));
         }break;
         }
     }
 
-    ImguiLayer::~ImguiLayer() {
-
-    }
-
-    void ImguiLayer::OnAttach() {
-        m_layerImpl->OnAttach();
-    }
-
     void ImguiLayer::OnDetach() {
-        m_layerImpl->OnDetach();
+        m_layerImpl.reset(nullptr);
     }
 
     void ImguiLayer::OnUpdate() {
@@ -75,9 +69,6 @@ namespace swheel {
                 }
             }
         }
-
-        // static bool show = true;
-        // ImGui::ShowDemoWindow(&show);
 
         m_layerImpl->ImguiFrameEnd();
     }

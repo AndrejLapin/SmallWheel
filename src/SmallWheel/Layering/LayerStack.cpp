@@ -2,12 +2,12 @@
 #include "LayerStack.hpp"
 
 namespace swheel {
-    void LayerStack::PushLayer(std::unique_ptr<Layer> layer) {
+    void LayerStack::PushLayer(RefCounted<Layer> layer) {
         m_layers.emplace(m_layers.begin() + m_layerInsertIndex, std::move(layer));
         ++m_layerInsertIndex;
     }
 
-    void LayerStack::PushOverlay(std::unique_ptr<Layer> overlay) {
+    void LayerStack::PushOverlay(RefCounted<Layer> overlay) {
         m_layers.emplace_back(std::move(overlay));
     }
 

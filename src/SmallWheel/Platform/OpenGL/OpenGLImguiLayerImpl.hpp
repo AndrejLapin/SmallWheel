@@ -8,9 +8,8 @@ namespace swheel {
     class OpenGLImguiLayerImpl : public ImguiLayerImpl {
     public:
         OpenGLImguiLayerImpl(const OpenGLWindow& ownerWindow);
+        ~OpenGLImguiLayerImpl();
 
-        void OnAttach() override;
-        void OnDetach() override;
         void OnUpdate() override;
         void ImguiFrameBegin() override;
         void ImguiFrameEnd() override;

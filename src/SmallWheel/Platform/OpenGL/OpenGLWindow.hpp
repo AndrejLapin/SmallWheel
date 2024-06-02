@@ -14,13 +14,14 @@ namespace swheel {
         void OnUpdate() override;
         bool IsClosed() const override { return m_closed; }
 
+        void PushLayer(RefCounted<Layer> layer) override;
+        void PushOverlay(RefCounted<Layer> layer) override;
+
         int GetWidth() const { return m_width; }
         int GetHeight() const { return m_height; }
         SDL_Window* GetSDLWindow() const { return m_window; }
         SDL_GLContext GetSDLGLContext() const { return m_context; }
     private:
-        void PushLayer(std::unique_ptr<Layer> layer) override;
-        void PushOverlay(std::unique_ptr<Layer> overlay) override;
         bool Init();
 
     private:

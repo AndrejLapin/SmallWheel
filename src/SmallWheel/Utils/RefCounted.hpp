@@ -10,6 +10,12 @@ namespace swheel {
             IncrementRefCount();
         }
 
+        // For polymorphism
+        template <typename B>
+        RefCounted(const RefCounted<B>& other):m_ptr(other.Get()) {
+            IncrementRefCount();
+        }
+
         RefCounted& operator=(const RefCounted& other) {
             DecrementRefCount();
             m_ptr = other.m_ptr;
@@ -29,6 +35,10 @@ namespace swheel {
             T* data = reinterpret_cast<T*>(refCount + 1);
             new(data) T(std::forward<Args>(args)...);
             return RefCounted<T>(data);
+        }
+
+        T* Get() const {
+            return m_ptr;
         }
 
         T* operator ->() {
