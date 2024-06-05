@@ -16,13 +16,6 @@ namespace swheel {
             IncrementRefCount();
         }
 
-        RefCounted& operator=(const RefCounted& other) {
-            DecrementRefCount();
-            m_ptr = other.m_ptr;
-            IncrementRefCount();
-            return *this;
-        }
-
         ~RefCounted() {
             DecrementRefCount();
         }
@@ -46,8 +39,18 @@ namespace swheel {
         }
 
         T& operator *() {
-            return m_ptr;
+            return *m_ptr;
         }
+
+        RefCounted& operator=(const RefCounted& other) {
+            DecrementRefCount();
+            m_ptr = other.m_ptr;
+            IncrementRefCount();
+            return *this;
+        }
+
+        bool operator==(const RefCounted& other) const { return m_ptr == other.m_ptr; }
+        bool operator!=(const RefCounted& other) const { return m_ptr != other.m_ptr; }
 
     private:
         explicit RefCounted(T* ptr): m_ptr(ptr) {}

@@ -116,8 +116,8 @@ namespace swheel {
         // we should detect what change occured to which shader
         // and only reload that source
         // maybe also check if the file still exists, if it doesn't don't reload it
-        Load();
         Unload();
+        Load();
     }
 
     void OpenGLShader::Bind() const {

@@ -1,8 +1,9 @@
-#include "RendererAPIs.hpp"
-#include "Renderers/SimpleMeshRenderer.hpp"
 #include "swpch.hpp"
 #include "GraphicsBackend.hpp"
 
+#include "RendererAPIs.hpp"
+#include "Renderers/SimpleMeshRenderer.hpp"
+#include "SmallWheel/Utils/RefCounted.hpp"
 #include "SmallWheel/Core.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLBuffer.hpp"
 #include "SmallWheel/Platform/OpenGL/OpenGLBackend.hpp"
@@ -25,9 +26,9 @@ namespace swheel {
         SW_ASSERT(false);
     }
 
-    std::unique_ptr<Shader> GraphicsBackend::CreateShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath) const {
+    RefCounted<Shader> GraphicsBackend::CreateShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath) const {
         switch (m_type) {
-        case RendererAPI::OpenGL: return std::make_unique<OpenGLShader>(vertexPath, fragmentPath);
+        case RendererAPI::OpenGL: return RefCounted<OpenGLShader>::Make(vertexPath, fragmentPath);
         }
         SW_ASSERT(false);
     }

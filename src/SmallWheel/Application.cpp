@@ -6,6 +6,7 @@
 #include "Window.hpp"
 #include "Platform/OpenGL/OpenGLWindow.hpp"
 #include "SmallWheel/GraphicsBackend/RendererAPIs.hpp"
+#include "SmallWheel/Layering/ShaderManagerLayer.hpp"
 #include "Utils/RefCounted.hpp"
 #include "GraphicsBackend/Shader.hpp"
 #include "GraphicsBackend/GraphicsBackend.hpp"
@@ -26,10 +27,13 @@ namespace swheel {
         m_window = m_backend->CreateWindow(title, width, height);
 
         auto imguiLayer = RefCounted<ImguiLayer>::Make(m_sharedData, "Imgui");
+        auto shaderManager = RefCounted<ShaderManagerLayer>::Make();
 
         m_window->PushOverlay(imguiLayer);
+        m_window->PushOverlay(shaderManager);
         m_shader = m_backend->CreateShader(shaderRegistry::s_colorOutVertexShader, shaderRegistry::s_colorInFragmentShader);
         m_shader->Load();
+        shaderManager->AddShader(m_shader);
     }
 
     Application::~Application() {
@@ -52,6 +56,7 @@ namespace swheel {
         do {
             m_backend->Clear();
             mesh->Reload();
+            auto& shader = *m_shader;
             m_backend->GetSimpleRenderer().DrawMesh(*m_shader, *mesh);
             m_window->OnUpdate();
 
