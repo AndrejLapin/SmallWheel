@@ -6,7 +6,7 @@ namespace swheel {
     template<typename T, typename E>
     class Result {
     public:
-        static Result valid(T result) {
+        static Result success(T result) {
             return Result(result);
         }
 
@@ -14,7 +14,7 @@ namespace swheel {
             return Result(error);
         }
 
-        bool isValid() const {
+        bool isSuccess() const {
             return std::holds_alternative<T>(m_data);
         }
 

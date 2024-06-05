@@ -12,36 +12,76 @@ namespace swheel {
     }
 
     OpenGLShader::~OpenGLShader() {
-        GLCall(glDeleteProgram(m_rendererId));
+        Unload();
     }
 
-    Shader::ShaderError OpenGLShader::LinkShaders(const std::vector<GLuint>& shaders) {
-        for (auto shader : shaders) {
-            GLCall(glAttachShader(m_rendererId, shader));
+    Result<GLuint, Shader::ShaderError> OpenGLShader::LoadShader(bool haltProgram) {
+        GLuint vertexShader;
+        GLuint fragmentShader;
+        {
+            std::string vertexSource = fileUtils::GetFileContents(m_vertexPath);
+            std::string fragmentSource = fileUtils::GetFileContents(m_fragmentPath);
+
+            Result<GLuint, ShaderError> vertexShaderResult = CompileShader(vertexSource, GL_VERTEX_SHADER, haltProgram);
+            Result<GLuint, ShaderError> fragmentShaderResult = CompileShader(fragmentSource, GL_FRAGMENT_SHADER, haltProgram);
+
+            if (!vertexShaderResult.isSuccess() || !fragmentShaderResult.isSuccess()) {
+                if (vertexShaderResult.isSuccess()) {
+                    GLCall(glDeleteShader(vertexShaderResult.getResult()));
+                } else if (fragmentShaderResult.isSuccess()) {
+                    GLCall(glDeleteShader(fragmentShaderResult.getResult()));
+                }
+                return Result<GLuint, Shader::ShaderError>::error(Shader::ShaderError::COMPILATION_FAILED);
+            }
+            vertexShader = vertexShaderResult.getResult();
+            fragmentShader = fragmentShaderResult.getResult();
         }
-        GLCall(glLinkProgram(m_rendererId));
+        
+        uint32_t programId = glCreateProgram();
+        ShaderError error = LinkShaders({vertexShader, fragmentShader}, programId, haltProgram);
+        if (error != ShaderError::NONE) {
+            GLCall(glDeleteProgram(programId));
+            GLCall(glDeleteProgram(vertexShader));
+            GLCall(glDeleteProgram(fragmentShader));
+            return Result<GLuint, Shader::ShaderError>::error(error);
+        }
+
+        // Always detach shaders after a successful link.
+        GLCall(glDetachShader(programId, vertexShader));
+        GLCall(glDetachShader(programId, fragmentShader));
+        GLCall(glDeleteShader(vertexShader));
+        GLCall(glDeleteShader(fragmentShader));
+        
+        return Result<GLuint, Shader::ShaderError>::success(programId);
+    }
+
+    Shader::ShaderError OpenGLShader::LinkShaders(const std::vector<GLuint>& shaders, uint32_t program, bool haltProgram) {
+        for (auto shader : shaders) {
+            GLCall(glAttachShader(program, shader));
+        }
+        GLCall(glLinkProgram(program));
 
         GLint isLinked = 0;
-        GLCall(glGetProgramiv(m_rendererId, GL_LINK_STATUS, (int*)&isLinked));
+        GLCall(glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked));
         if (isLinked == GL_FALSE) {
             GLint maxLength = 0;
-            GLCall(glGetProgramiv(m_rendererId, GL_INFO_LOG_LENGTH, &maxLength));
+            GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength));
 
             if (maxLength > 0 ) {
                 auto infoLog = std::make_unique<GLchar[]>(maxLength);
-                GLCall(glGetProgramInfoLog(m_rendererId, maxLength, &maxLength, &infoLog[0]));
+                GLCall(glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]));
 
                 std::cerr << "Shader link failure: " << infoLog.get() << '\n';
             } else {
                 std::cerr << "Unknown shader link failure!\n";
             }
-            SW_ASSERT(false);
+            SW_ASSERT(!haltProgram);
             return ShaderError::LINKING_FAILED;
         }
         return ShaderError::NONE;
     }
 
-    Result<GLuint, Shader::ShaderError> OpenGLShader::CompileShader(const std::string& shaderSource, GLenum type) {
+    Result<GLuint, Shader::ShaderError> OpenGLShader::CompileShader(const std::string& shaderSource, GLenum type, bool haltProgram) {
         GLCall(GLuint shader = glCreateShader(type));
 
         const GLchar* source = shaderSource.c_str();
@@ -62,54 +102,23 @@ namespace swheel {
 
                 std::cerr << "Shader compliation failure: " << infoLog.get() << '\n';
             } else {
-                std::cerr << "Unknown shader link failure!\n";
+                std::cerr << "Unknown shader compilation failure!\n";
             }
-
-            SW_ASSERT(false);
+            SW_ASSERT(!haltProgram);
             return Result<GLuint, ShaderError>::error(ShaderError::COMPILATION_FAILED);
         }
-        return Result<GLuint, ShaderError>::valid(shader);
+        return Result<GLuint, ShaderError>::success(shader);
     }
 
     void OpenGLShader::Load() {
-        GLuint vertexShader;
-        GLuint fragmentShader;
-        {
-            std::string vertexSource = fileUtils::GetFileContents(m_vertexPath);
-            std::string fragmentSource = fileUtils::GetFileContents(m_fragmentPath);
-
-            Result<GLuint, ShaderError> vertexShaderResult = CompileShader(vertexSource, GL_VERTEX_SHADER);
-            Result<GLuint, ShaderError> fragmentShaderResult = CompileShader(fragmentSource, GL_FRAGMENT_SHADER);
-
-            if (!vertexShaderResult.isValid() || !fragmentShaderResult.isValid()) {
-                if (vertexShaderResult.isValid()) {
-                    GLCall(glDeleteShader(vertexShaderResult.getResult()));
-                } else if (fragmentShaderResult.isValid()) {
-                    GLCall(glDeleteShader(fragmentShaderResult.getResult()));
-                }
-                return;
-            }
-            vertexShader = vertexShaderResult.getResult();
-            fragmentShader = fragmentShaderResult.getResult();
+        Result<GLuint, Shader::ShaderError> result = LoadShader();
+        if (result.isSuccess()) {
+            m_programId = result.getResult();
         }
-
-        m_rendererId = glCreateProgram();
-        ShaderError error = LinkShaders({vertexShader, fragmentShader});
-        if (error != ShaderError::NONE) {
-            GLCall(glDeleteProgram(m_rendererId));
-            GLCall(glDeleteProgram(vertexShader));
-            GLCall(glDeleteProgram(fragmentShader));
-        }
-
-        // Always detach shaders after a successful link.
-        GLCall(glDetachShader(m_rendererId, vertexShader));
-        GLCall(glDetachShader(m_rendererId, fragmentShader));
-        GLCall(glDeleteShader(vertexShader));
-        GLCall(glDeleteShader(fragmentShader));
     }
 
     void OpenGLShader::Unload() {
-        GLCall(glDeleteProgram(m_rendererId));
+        GLCall(glDeleteProgram(m_programId));
     }
 
     void OpenGLShader::Reload() {
@@ -120,11 +129,22 @@ namespace swheel {
         Load();
     }
 
+    void OpenGLShader::TryReload() {
+        Result<GLuint, Shader::ShaderError> result = LoadShader(false);
+        if (!result.isSuccess()) {
+            return;
+        }
+        Unload();
+        m_programId = result.getResult();
+    }
+
     void OpenGLShader::Bind() const {
-        GLCall(glUseProgram(m_rendererId));
+        GLCall(glUseProgram(m_programId));
     }
 
     void OpenGLShader::Unbind() const {
-        GLCall(glUseProgram(m_rendererId));
+        if (m_programId) {
+            GLCall(glUseProgram(m_programId));
+        }
     }
 }

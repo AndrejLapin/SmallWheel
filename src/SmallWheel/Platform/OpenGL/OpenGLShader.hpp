@@ -13,15 +13,17 @@ namespace swheel {
         void Load() override;
         void Unload() override;
         void Reload() override;
+        void TryReload() override;
         void Bind() const override;
         void Unbind() const override;
 
     private:
-        ShaderError LinkShaders(const std::vector<GLuint>& shaders);
-        Result<GLuint, ShaderError> CompileShader(const std::string& shaderSource, GLenum type);
+        Result<GLuint, ShaderError> LoadShader(bool haltProgram = true);
+        ShaderError LinkShaders(const std::vector<GLuint>& shaders, GLuint program, bool haltProgram);
+        Result<GLuint, ShaderError> CompileShader(const std::string& shaderSource, GLenum type, bool haltProgram);
 
     private:
         std::filesystem::path m_vertexPath, m_fragmentPath;
-        uint32_t m_rendererId;
+        GLuint m_programId = 0;
     };
 }

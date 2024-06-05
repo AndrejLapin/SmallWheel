@@ -37,7 +37,7 @@ namespace swheel {
 
     void ShaderManagerLayer::ReloadAllShaders() {
         for (auto& shader : m_shaders) {
-            shader->Reload();
+            shader->TryReload();
         }
     }
 }
