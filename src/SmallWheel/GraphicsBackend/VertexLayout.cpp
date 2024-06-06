@@ -10,8 +10,8 @@ namespace swheel {
         case VertexPropertyType::Float2:    return 4 * 2;
         case VertexPropertyType::Float3:    return 4 * 3;
         case VertexPropertyType::Float4:    return 4 * 4;
+        default: SW_ASSERT_LOG(false, "Unknown VertexPropertyType!");
         }
-        SW_ASSERT_LOG(false, "Unknown VertexPropertyType!");
         return 0;
     }
 
@@ -21,8 +21,8 @@ namespace swheel {
         case VertexPropertyType::Float2:    return 2;
         case VertexPropertyType::Float3:    return 3;
         case VertexPropertyType::Float4:    return 4;
+        default: SW_ASSERT_LOG(false, "Unknown VertexPropertyType!");
         }
-        SW_ASSERT_LOG(false, "Unknown VertexPropertyType!");
         return 0;
     }
 

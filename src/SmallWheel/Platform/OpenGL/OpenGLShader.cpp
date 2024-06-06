@@ -7,8 +7,9 @@
 #include "SmallWheel/Utils/FileUtils.hpp"
 
 namespace swheel {
-    OpenGLShader::OpenGLShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath):
-    m_vertexPath(vertexPath), m_fragmentPath(fragmentPath) {
+    OpenGLShader::OpenGLShader(const ShaderRegistry::Entry& vertexEntry, const ShaderRegistry::Entry& fragmentEntry):
+        m_vertexPath(vertexEntry.GetPath(RendererAPI::OpenGL)), 
+        m_fragmentPath(fragmentEntry.GetPath(RendererAPI::OpenGL)) {
     }
 
     OpenGLShader::~OpenGLShader() {

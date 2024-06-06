@@ -27,16 +27,33 @@ namespace swheel {
         m_window = m_backend->CreateWindow(title, width, height);
 
         auto imguiLayer = RefCounted<ImguiLayer>::Make(m_sharedData, "Imgui");
-        auto shaderManager = RefCounted<ShaderManagerLayer>::Make();
 
         m_window->PushOverlay(imguiLayer);
-        m_window->PushOverlay(shaderManager);
-        m_shader = m_backend->CreateShader(shaderRegistry::s_colorOutVertexShader, shaderRegistry::s_colorInFragmentShader);
-        m_shader->Load();
-        shaderManager->AddShader(m_shader);
     }
 
     Application::~Application() {
+    }
+
+    void Application::ConfigureEngine(EngineConfiguration& configuration) {
+        // do things
+
+        // call the function that user can override
+
+        if (configuration.GetResourcesPath().empty()) {
+            configuration.SetResourcesPath("../SmallWheel/res/");
+        }
+
+        m_shaderRegistry = ShaderRegistry(configuration.GetResourcesPath());
+
+        {
+            auto shaderManager = RefCounted<ShaderManagerLayer>::Make();
+            m_window->PushOverlay(shaderManager);
+            const ShaderRegistry::Entry& vertex = m_shaderRegistry.GetEntry(ShaderRegistry::Type::COLOR_OUT_VERTEX_SHADER);
+            const ShaderRegistry::Entry& fragment = m_shaderRegistry.GetEntry(ShaderRegistry::Type::COLOR_IN_FRAGMENT_SHADER);
+            m_shader = m_backend->CreateShader(vertex, fragment);
+            m_shader->Load();
+            shaderManager->AddShader(m_shader);
+        }
     }
 
     void Application::Run() {
