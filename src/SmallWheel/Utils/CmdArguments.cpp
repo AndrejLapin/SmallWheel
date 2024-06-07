@@ -2,7 +2,6 @@
 #include "CmdArguments.hpp"
 
 #include "SmallWheel/Core.hpp"
-#include <string>
 
 namespace swheel::cli {
     Argument::Argument(std::string longName, std::string shortName,
@@ -78,7 +77,8 @@ namespace swheel::cli {
         for (int i = 1; i < argc; ++i) {
             bool handled = false;
             for (auto rit = m_arguments.rbegin(); rit != m_arguments.rend(); ++rit) {
-                Result<bool, std::string> result = rit->HandleArgument(argc, argv, i);
+                SW_ASSERT_LOG(rit->has_value(), "Argument has no value!");
+                Result<bool, std::string> result = rit->value().HandleArgument(argc, argv, i);
                 if (!result.isSuccess()) {
                     errorMessage += result.getError();
                     continue;
@@ -113,7 +113,8 @@ namespace swheel::cli {
         std::cout << " [options]\n"
         << "Options: \n";
         for (auto rit = m_arguments.rbegin(); rit != m_arguments.rend(); ++rit) {
-            rit->PrintHelp();
+            SW_ASSERT_LOG(rit->has_value(), "Argument has no value!");
+            rit->value().PrintHelp();
         }
     }
 }

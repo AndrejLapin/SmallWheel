@@ -32,7 +32,8 @@ namespace swheel::cli {
 
     class Arguments {
     public:
-        Arguments() = default;
+        // Maybe I dont need default constructor? Or maybe I do?
+        // Arguments() = default;
         Arguments(std::string programName, bool defaultHelpArg = true);
         ~Arguments();
 
@@ -46,7 +47,8 @@ namespace swheel::cli {
     private:
         std::string m_executableName;
         std::string m_programName;
-        std::vector<Argument> m_arguments;
+        // TODO: implement dynamic array with managed memory for performance imrpovements
+        std::vector<std::optional<Argument>> m_arguments;
         bool m_showHelp = false;
     };
 }

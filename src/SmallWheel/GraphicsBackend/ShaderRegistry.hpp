@@ -5,6 +5,7 @@
 namespace swheel {
     class ShaderRegistry {
     public:
+        // make small wheel wrapper for this instead
         enum class Type: uint32_t {
             COLOR_OUT_VERTEX_SHADER,
             COLOR_IN_FRAGMENT_SHADER,
@@ -26,7 +27,6 @@ namespace swheel {
         const Entry& GetEntry(Type type) const; 
 
     private:
-        // TODO: implement dynamic array with managed memory for performance imrpovements
         std::vector<std::optional<Entry>> m_entries;
     };
 }

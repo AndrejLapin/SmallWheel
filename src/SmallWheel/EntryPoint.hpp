@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     swheel::EngineConfiguration configuration;
     swheel::Application* app = swheel::CreateApplication();
     configuration.ParseArguments(argc, argv);
-    // pass this configuration to application
+    app->ConfigureEngine(configuration);
     app->Run();
     delete app;
 }
