@@ -1,5 +1,5 @@
 #include "swpch.hpp"
-#include "CmdArguments.hpp"
+#include "CLIArguments.hpp"
 
 #include "SmallWheel/Core.hpp"
 

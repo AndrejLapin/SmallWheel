@@ -5,13 +5,6 @@
 namespace swheel {
     class ShaderRegistry {
     public:
-        // make small wheel wrapper for this instead
-        enum class Type: uint32_t {
-            COLOR_OUT_VERTEX_SHADER,
-            COLOR_IN_FRAGMENT_SHADER,
-            TOTAL
-        };
-
         class Entry {
         public:
             Entry(std::filesystem::path openGLPath);
@@ -23,8 +16,8 @@ namespace swheel {
 
     public:
         ShaderRegistry() = default;
-        ShaderRegistry(const std::string& resourcesPath);
-        const Entry& GetEntry(Type type) const; 
+        const Entry& GetEntry(uint16_t type) const; 
+        std::vector<std::optional<Entry>>& GetEntries() { return m_entries; }
 
     private:
         std::vector<std::optional<Entry>> m_entries;

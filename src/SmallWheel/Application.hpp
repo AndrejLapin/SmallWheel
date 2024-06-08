@@ -4,7 +4,7 @@
 #include "SDLLifetime.hpp"
 #include "GraphicsBackend/MeshData.hpp"
 #include "GraphicsBackend/GraphicsBackend.hpp"
-#include "GraphicsBackend/ShaderRegistry.hpp"
+#include "SmallWheel/CoreShaderRegistry.hpp"
 #include "Utils/RefCounted.hpp"
 
 namespace swheel {
@@ -32,7 +32,7 @@ namespace swheel {
         std::unique_ptr<Window> m_window;
         RefCounted<Shader> m_shader;
         SharedData m_sharedData;
-        ShaderRegistry m_shaderRegistry;
+        CoreShaderRegistry m_shaderRegistry;
     };
 
     // To be defined in a Client

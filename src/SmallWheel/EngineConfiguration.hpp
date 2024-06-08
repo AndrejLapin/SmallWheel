@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils/CmdArguments.hpp"
+#include "Utils/CLIArguments.hpp"
 
 namespace swheel {
 
