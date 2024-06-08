@@ -39,7 +39,7 @@ namespace swheel::cli {
 
         // TODO: create function to add multiple arguments at once
         void AddArgument(Argument&& argument);
-        void ParseArguments(int argc, char** argv);
+        bool ParseArguments(int argc, char** argv);
 
     private:
         void PrintHelp();

@@ -20,10 +20,11 @@ namespace swheel {
             MeshData* meshData = nullptr;
         };
 
-        Application(const std::string& title, int width, int height);
+        Application();
         virtual ~Application();
 
-        void ConfigureEngine(EngineConfiguration& configuration);
+        virtual void SetConfigurationDefaults(EngineConfiguration& configuration) {};
+        void InitialiseApplication(EngineConfiguration& configuration);
         void Run();
 
     private:

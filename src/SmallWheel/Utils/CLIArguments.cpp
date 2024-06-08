@@ -67,17 +67,17 @@ namespace swheel::cli {
         m_arguments.emplace_back(std::move(argument));
     }
 
-    void Arguments::ParseArguments(int argc, char** argv) {
+    bool Arguments::ParseArguments(int argc, char** argv) {
         m_executableName = argv[0];
         if (argc < 2) {
-            return;
+            return true;
         }
         std::string errorMessage;
         m_showHelp = false;
         for (int i = 1; i < argc; ++i) {
             bool handled = false;
             for (auto rit = m_arguments.rbegin(); rit != m_arguments.rend(); ++rit) {
-                SW_ASSERT_LOG(rit->has_value(), "Argument has no value!");
+                SW_ASSERT_LOG(rit->has_value(), "Argument not initialised!");
                 Result<bool, std::string> result = rit->value().HandleArgument(argc, argv, i);
                 if (!result.isSuccess()) {
                     errorMessage += result.getError();
@@ -95,12 +95,16 @@ namespace swheel::cli {
                 errorMessage += error.str();
             }
         }
+        bool ok = true;
         if (!errorMessage.empty()) {
             std::cerr << errorMessage;
+            ok = false;
         }
         if (m_showHelp) {
             PrintHelp();
+            ok = false;
         }
+        return ok;
     }
 
     void Arguments::PrintHelp() {
@@ -113,7 +117,7 @@ namespace swheel::cli {
         std::cout << " [options]\n"
         << "Options: \n";
         for (auto rit = m_arguments.rbegin(); rit != m_arguments.rend(); ++rit) {
-            SW_ASSERT_LOG(rit->has_value(), "Argument has no value!");
+            SW_ASSERT_LOG(rit->has_value(), "Argument not initialised!");
             rit->value().PrintHelp();
         }
     }

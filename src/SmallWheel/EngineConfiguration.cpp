@@ -9,7 +9,7 @@ namespace swheel {
     
     EngineConfiguration::~EngineConfiguration() {}
 
-    void EngineConfiguration::ParseArguments(int argc, char** argv) {
-        m_arguments.ParseArguments(argc, argv);
+    bool EngineConfiguration::ParseArguments(int argc, char** argv) {
+        return m_arguments.ParseArguments(argc, argv);
     }
 }

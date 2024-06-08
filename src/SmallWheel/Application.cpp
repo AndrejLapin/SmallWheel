@@ -18,29 +18,55 @@
 
 namespace swheel {
 
-    Application::Application(const std::string& title, int width, int height) {
-        m_sdlLifetime.Init();
-
-        m_backend = GraphicsBackend::CreateBackend(RendererAPI::OpenGL);
-
-        m_window = m_backend->CreateWindow(title, width, height);
-
-        auto imguiLayer = RefCounted<ImguiLayer>::Make(m_sharedData, "Imgui");
-
-        m_window->PushOverlay(imguiLayer);
+    Application::Application() {
     }
 
     Application::~Application() {
     }
 
-    void Application::ConfigureEngine(EngineConfiguration& configuration) {
+    void Application::InitialiseApplication(EngineConfiguration& configuration) {
         // do things
 
-        // call the function that user can override
+        SetConfigurationDefaults(configuration);
+
+        // maybe things below have to be moved to "SetConfigurationDefaults"?
+        if (configuration.GetWindowName().empty()) {
+            configuration.SetWindowName("SmallWheel");
+        }
+
+        {
+            bool dirty = false;
+            std::pair<int, int> windowSize = configuration.GetWindowSize();
+            if (windowSize.first <= 0) {
+                dirty = true;
+                windowSize.first = 1600;
+            }
+
+            if (windowSize.second <= 0) {
+                dirty = true;
+                windowSize.second = 800;
+            }
+
+            configuration.SetWindowSize(windowSize.first, windowSize.second);
+        }
 
         if (configuration.GetResourcesPath().empty()) {
             configuration.SetResourcesPath("../SmallWheel/res/");
         }
+
+        m_sdlLifetime.Init();
+
+        m_backend = GraphicsBackend::CreateBackend(RendererAPI::OpenGL);
+
+        {
+            const std::pair<int, int>& windowSize = configuration.GetWindowSize();
+            m_window = m_backend->CreateWindow(configuration.GetWindowName(),
+                windowSize.first, windowSize.second);
+        }
+
+        auto imguiLayer = RefCounted<ImguiLayer>::Make(m_sharedData, "Imgui");
+
+        m_window->PushOverlay(imguiLayer);
 
         m_shaderRegistry = CoreShaderRegistry(configuration.GetResourcesPath());
 
