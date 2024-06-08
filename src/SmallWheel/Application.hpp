@@ -1,10 +1,11 @@
 #pragma once
 
+#include "EngineConfiguration.hpp"
 #include "SDLLifetime.hpp"
 #include "GraphicsBackend/MeshData.hpp"
-#include "SmallWheel/GraphicsBackend/MeshData.hpp"
-#include "SmallWheel/GraphicsBackend/GraphicsBackend.hpp"
-#include "SmallWheel/Utils/RefCounted.hpp"
+#include "GraphicsBackend/GraphicsBackend.hpp"
+#include "SmallWheel/CoreShaderRegistry.hpp"
+#include "Utils/RefCounted.hpp"
 
 namespace swheel {
     class Window;
@@ -19,9 +20,11 @@ namespace swheel {
             MeshData* meshData = nullptr;
         };
 
-        Application(const std::string& title, int width, int height);
+        Application();
         virtual ~Application();
 
+        virtual void SetConfigurationDefaults(EngineConfiguration& configuration) {};
+        void InitialiseApplication(EngineConfiguration& configuration);
         void Run();
 
     private:
@@ -30,6 +33,7 @@ namespace swheel {
         std::unique_ptr<Window> m_window;
         RefCounted<Shader> m_shader;
         SharedData m_sharedData;
+        CoreShaderRegistry m_shaderRegistry;
     };
 
     // To be defined in a Client

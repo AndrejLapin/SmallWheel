@@ -1,10 +1,25 @@
 #pragma once
 
-#include <filesystem>
+#include "RendererAPIs.hpp"
 
 namespace swheel {
-    struct shaderRegistry {
-        static const std::filesystem::path s_colorOutVertexShader;
-        static const std::filesystem::path s_colorInFragmentShader;
+    class ShaderRegistry {
+    public:
+        class Entry {
+        public:
+            Entry(std::filesystem::path openGLPath);
+            const std::filesystem::path& GetPath(RendererAPI api) const;
+
+        private:
+            const std::filesystem::path m_openGLPath;
+        };
+
+    public:
+        ShaderRegistry() = default;
+        const Entry& GetEntry(uint16_t type) const; 
+        std::vector<std::optional<Entry>>& GetEntries() { return m_entries; }
+
+    private:
+        std::vector<std::optional<Entry>> m_entries;
     };
 }

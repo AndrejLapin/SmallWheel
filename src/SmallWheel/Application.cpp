@@ -15,28 +15,70 @@
 #include "GraphicsBackend/Renderers/SimpleMeshRenderer.hpp"
 #include "GraphicsBackend/Mesh.hpp"
 #include "GraphicsBackend/MeshData.hpp"
-#include "GraphicsBackend/ShaderRegistry.hpp"
 
 namespace swheel {
 
-    Application::Application(const std::string& title, int width, int height) {
+    Application::Application() {
+    }
+
+    Application::~Application() {
+    }
+
+    void Application::InitialiseApplication(EngineConfiguration& configuration) {
+        // do things
+
+        SetConfigurationDefaults(configuration);
+
+        // maybe things below have to be moved to "SetConfigurationDefaults"?
+        if (configuration.GetWindowName().empty()) {
+            configuration.SetWindowName("SmallWheel");
+        }
+
+        {
+            bool dirty = false;
+            std::pair<int, int> windowSize = configuration.GetWindowSize();
+            if (windowSize.first <= 0) {
+                dirty = true;
+                windowSize.first = 1600;
+            }
+
+            if (windowSize.second <= 0) {
+                dirty = true;
+                windowSize.second = 800;
+            }
+
+            configuration.SetWindowSize(windowSize.first, windowSize.second);
+        }
+
+        if (configuration.GetResourcesPath().empty()) {
+            configuration.SetResourcesPath("../SmallWheel/res/");
+        }
+
         m_sdlLifetime.Init();
 
         m_backend = GraphicsBackend::CreateBackend(RendererAPI::OpenGL);
 
-        m_window = m_backend->CreateWindow(title, width, height);
+        {
+            const std::pair<int, int>& windowSize = configuration.GetWindowSize();
+            m_window = m_backend->CreateWindow(configuration.GetWindowName(),
+                windowSize.first, windowSize.second);
+        }
 
         auto imguiLayer = RefCounted<ImguiLayer>::Make(m_sharedData, "Imgui");
-        auto shaderManager = RefCounted<ShaderManagerLayer>::Make();
 
         m_window->PushOverlay(imguiLayer);
-        m_window->PushOverlay(shaderManager);
-        m_shader = m_backend->CreateShader(shaderRegistry::s_colorOutVertexShader, shaderRegistry::s_colorInFragmentShader);
-        m_shader->Load();
-        shaderManager->AddShader(m_shader);
-    }
 
-    Application::~Application() {
+        m_shaderRegistry = CoreShaderRegistry(configuration.GetResourcesPath());
+
+        {
+            auto shaderManager = RefCounted<ShaderManagerLayer>::Make();
+            m_window->PushOverlay(shaderManager);
+            const ShaderRegistry::Entry& vertex = m_shaderRegistry.GetEntry(CoreShaderRegistry::Type::COLOR_OUT_VERTEX_SHADER);
+            const ShaderRegistry::Entry& fragment = m_shaderRegistry.GetEntry(CoreShaderRegistry::Type::COLOR_IN_FRAGMENT_SHADER);
+            m_shader = m_backend->CreateShader(vertex, fragment);
+            m_shader->Load();
+            shaderManager->AddShader(m_shader);
+        }
     }
 
     void Application::Run() {

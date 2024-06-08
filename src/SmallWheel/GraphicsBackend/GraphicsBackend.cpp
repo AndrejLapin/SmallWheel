@@ -26,9 +26,9 @@ namespace swheel {
         SW_ASSERT(false);
     }
 
-    RefCounted<Shader> GraphicsBackend::CreateShader(const std::filesystem::path& vertexPath, const std::filesystem::path& fragmentPath) const {
+    RefCounted<Shader> GraphicsBackend::CreateShader(const ShaderRegistry::Entry& vertexEntry, const ShaderRegistry::Entry& fragmentEntry) const {
         switch (m_type) {
-        case RendererAPI::OpenGL: return RefCounted<OpenGLShader>::Make(vertexPath, fragmentPath);
+        case RendererAPI::OpenGL: return RefCounted<OpenGLShader>::Make(vertexEntry, fragmentEntry);
         }
         SW_ASSERT(false);
     }
