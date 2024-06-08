@@ -18,7 +18,7 @@ namespace swheel::cli {
         ~Argument() {}
 
         void PrintHelp();
-        Result<bool, std::string> HandleArgument(int argc, char** argv, int current);
+        Result<bool, std::string> HandleArgument(int argc, char** argv, int& current);
 
     private:
         const std::string m_long;

@@ -18,7 +18,7 @@ namespace swheel::cli {
         std::cout << " " << m_short << ", " << m_long << " " << m_helperInput << " " << m_helperExplanation << "\n";
     }
 
-    Result<bool, std::string> Argument::HandleArgument(int argc, char** argv, int current) {
+    Result<bool, std::string> Argument::HandleArgument(int argc, char** argv, int& current) {
         SW_ASSERT_LOG(m_type != Type::NONE , "Something went wrong! Unconfigured argument ended up in arguments!");
 
         if (m_long.find(argv[current]) == std::string::npos && (m_short.empty() || m_short.find(argv[current]) == std::string::npos)) {
@@ -91,7 +91,7 @@ namespace swheel::cli {
             if (!handled) {
                 m_showHelp = true;
                 std::stringstream error;
-                error << "Unknown option " << argv[i] << "\n";
+                error << "Unknown option \"" << argv[i] << "\"\n";
                 errorMessage += error.str();
             }
         }
