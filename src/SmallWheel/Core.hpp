@@ -1,22 +1,23 @@
 #pragma once
-
-#define GlCall(x)
+#include "Utils/LogUtils.hpp"
 
 #ifdef SW_DEBUG
-    #define SW_ENABLE_ERROR_LOGS
+    #define SW_ENABLE_LOGGING
     #define SW_ENABLE_ASSERTS
     #define SW_ENABLE_GRAPHICS_DEBUG
 #endif
 
-// TODO: implement later
-// #ifdef SW_ENABLE_ERROR_LOGS
-//     #define SW_ERROR_LOG(format)
-// #else
-// #endif
+#ifdef SW_ENABLE_LOGGING
+    #define SW_LOG(...) do { swheel::log::Info(__VA_ARGS__); }while(0)
+    #define SW_ERROR_LOG(...) do { swheel::log::Error(__VA_ARGS__); }while(0)
+#else
+    #define SW_LOG(message)
+    #define SW_ERROR_LOG(message)
+#endif
 
 #ifdef SW_ENABLE_ASSERTS
     #define SW_ASSERT(condition) do { assert(condition); }while(0)
-    #define SW_ASSERT_LOG(condition, ...) do{ if(!(condition)) { std::cerr << __VA_ARGS__ << '\n'; assert(false); } }while(0)
+    #define SW_ASSERT_LOG(condition, ...) do{ if(!(condition)) { SW_ERROR_LOG(__VA_ARGS__); assert(false); } }while(0)
 #else
     #define SW_ASSERT(condition)
     #define SW_ASSERT_LOG(condition, ...)

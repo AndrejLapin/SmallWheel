@@ -73,8 +73,8 @@ namespace swheel {
         {
             auto shaderManager = RefCounted<ShaderManagerLayer>::Make();
             m_window->PushOverlay(shaderManager);
-            const ShaderRegistry::Entry& vertex = m_shaderRegistry.GetEntry(CoreShaderRegistry::Type::COLOR_OUT_VERTEX_SHADER);
-            const ShaderRegistry::Entry& fragment = m_shaderRegistry.GetEntry(CoreShaderRegistry::Type::COLOR_IN_FRAGMENT_SHADER);
+            const ShaderResourceRegistry::Entry& vertex = m_shaderRegistry.GetEntry(CoreShaderRegistry::Type::COLOR_OUT_VERTEX_SHADER);
+            const ShaderResourceRegistry::Entry& fragment = m_shaderRegistry.GetEntry(CoreShaderRegistry::Type::COLOR_IN_FRAGMENT_SHADER);
             m_shader = m_backend->CreateShader(vertex, fragment);
             m_shader->Load();
             shaderManager->AddShader(m_shader);

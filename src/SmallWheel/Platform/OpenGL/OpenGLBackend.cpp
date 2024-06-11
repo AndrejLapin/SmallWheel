@@ -14,7 +14,7 @@ namespace swheel {
 
     bool GLLogCall(const char* function, const char* file, int line) {
         while (GLenum error = glGetError()) {
-            std::cerr << "OpenGL Error: (" << error << ") " << function << ' ' << file << ':' << line << '\n';
+            SW_ERROR_LOG("OpenGL Error: (", error, ") ", function, ' ', file, ':', line);
             return false;
         }
         return true;
@@ -47,12 +47,12 @@ namespace swheel {
         int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
         if (version == 0) {
             SDLLifetime::PrintSDLErrors();
-            std::cerr << "Failed to initialize OpenGL context :(\n";
+            SW_ERROR_LOG("Failed to initialize OpenGL context :(");
             exit(1);
         }
-        std::cout << "OpenGL Info:\n";
-        std::cout << " Vendor: " << glGetString(GL_VENDOR) << '\n';
-        std::cout << " Renderer: " << glGetString(GL_RENDERER) << '\n';
-        std::cout << " Version: " << glGetString(GL_VERSION) << '\n';
+        SW_LOG("OpenGL Info:");
+        SW_LOG(" Vendor: ", glGetString(GL_VENDOR));
+        SW_LOG(" Renderer: ", glGetString(GL_RENDERER));
+        SW_LOG(" Version: ", glGetString(GL_VERSION));
     }
 }

@@ -7,7 +7,7 @@
 #include "SmallWheel/Utils/FileUtils.hpp"
 
 namespace swheel {
-    OpenGLShader::OpenGLShader(const ShaderRegistry::Entry& vertexEntry, const ShaderRegistry::Entry& fragmentEntry):
+    OpenGLShader::OpenGLShader(const ShaderResourceRegistry::Entry& vertexEntry, const ShaderResourceRegistry::Entry& fragmentEntry):
         m_vertexPath(vertexEntry.GetPath(RendererAPI::OpenGL)), 
         m_fragmentPath(fragmentEntry.GetPath(RendererAPI::OpenGL)) {
     }
@@ -72,9 +72,9 @@ namespace swheel {
                 auto infoLog = std::make_unique<GLchar[]>(maxLength);
                 GLCall(glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]));
 
-                std::cerr << "Shader link failure: " << infoLog.get() << '\n';
+                SW_ERROR_LOG("Shader link failure: ", infoLog.get());
             } else {
-                std::cerr << "Unknown shader link failure!\n";
+                SW_ERROR_LOG("Unknown shader link failure!");
             }
             SW_ASSERT(!haltProgram);
             return ShaderError::LINKING_FAILED;
@@ -101,9 +101,9 @@ namespace swheel {
 
                 GLCall(glDeleteShader(shader));
 
-                std::cerr << "Shader compliation failure: " << infoLog.get() << '\n';
+                SW_ERROR_LOG("Shader compliation failure: ", infoLog.get());
             } else {
-                std::cerr << "Unknown shader compilation failure!\n";
+                SW_ERROR_LOG("Unknown shader compilation failure!");
             }
             SW_ASSERT(!haltProgram);
             return Result<GLuint, ShaderError>::error(ShaderError::COMPILATION_FAILED);

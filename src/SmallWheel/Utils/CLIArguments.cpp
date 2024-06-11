@@ -15,7 +15,7 @@ namespace swheel::cli {
     void Argument::PrintHelp() {
         SW_ASSERT_LOG(m_type != Type::NONE , "Something went wrong! Unconfigured argument ended up in arguments!");
         //TODO: there should be some kind of indentation counter before m_helperExplanation
-        std::cout << " " << m_short << ", " << m_long << " " << m_helperInput << " " << m_helperExplanation << "\n";
+        log::Info(" ", m_short, ", ", m_long, " ", m_helperInput, " ", m_helperExplanation);
     }
 
     Result<bool, std::string> Argument::HandleArgument(int argc, char** argv, int& current) {
@@ -97,7 +97,7 @@ namespace swheel::cli {
         }
         bool ok = true;
         if (!errorMessage.empty()) {
-            std::cerr << errorMessage;
+            log::Error(errorMessage);
             ok = false;
         }
         if (m_showHelp) {

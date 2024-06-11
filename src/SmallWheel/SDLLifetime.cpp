@@ -2,6 +2,7 @@
 #include "SDLLifetime.hpp"
 
 #include "SDL.h"
+#include "Core.hpp"
 
 namespace swheel {
     SDLLifetime::SDLLifetime() {}
@@ -12,9 +13,9 @@ namespace swheel {
 
     void SDLLifetime::Init() {
         if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-            std::cerr << "Failed to initialize SDL.\n";
+            SW_ERROR_LOG("Failed to initialize SDL.");
         } else {
-            std::cout << "SDL initialised.\n";
+            SW_LOG("SDL initialised.");
         }
     }
 
@@ -22,7 +23,7 @@ namespace swheel {
         constexpr uint16_t maxErrors = 1000;
         uint16_t currentErrors = 0;
         while (const char* error = SDL_GetError()) {
-            std::cerr << error << '\n';
+            SW_ERROR_LOG(error);
             if (++currentErrors >= maxErrors) {
                 break;
             }

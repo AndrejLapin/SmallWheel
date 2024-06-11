@@ -1,9 +1,8 @@
-#include "SDL_scancode.h"
 #include "swpch.hpp"
 #include "ShaderManagerLayer.hpp"
 
 #include "SDL_events.h"
-#include <iostream>
+#include "SDL_scancode.h"
 
 namespace swheel {
     ShaderManagerLayer::ShaderManagerLayer(const std::string& name): Layer(name) {
@@ -14,7 +13,7 @@ namespace swheel {
         if (event.m_event.type == SDL_KEYUP) {
             if (event.m_event.key.keysym.scancode == SDL_SCANCODE_NONUSBACKSLASH) { // need to make sure this is actually the '~' key
                 ReloadAllShaders();
-                std::cout << "Shaders reloaded\n";
+                SW_LOG("Shaders reloaded");
             }
         }
     }

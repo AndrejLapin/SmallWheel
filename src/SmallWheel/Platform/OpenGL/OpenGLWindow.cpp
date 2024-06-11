@@ -75,14 +75,14 @@ namespace swheel {
         );
 
         if (m_window == nullptr) {
-            std::cerr << "Failed to create window.\n";
+            SW_ERROR_LOG("Failed to create window.");
             return false;
         }
 
         m_context = SDL_GL_CreateContext(m_window);
 
         if (m_context == nullptr) {
-            std::cerr << "OpenGL context not avalibale\n";
+            SW_ERROR_LOG("OpenGL context not avalibale.");
             return false;
         }
 
