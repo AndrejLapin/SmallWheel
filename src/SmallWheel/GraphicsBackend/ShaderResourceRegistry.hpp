@@ -3,7 +3,7 @@
 #include "RendererAPIs.hpp"
 
 namespace swheel {
-    class ShaderRegistry {
+    class ShaderResourceRegistry {
     public:
         class Entry {
         public:
@@ -15,7 +15,7 @@ namespace swheel {
         };
 
     public:
-        ShaderRegistry() = default;
+        ShaderResourceRegistry() = default;
         const Entry& GetEntry(uint16_t type) const; 
         std::vector<std::optional<Entry>>& GetEntries() { return m_entries; }
 

@@ -3,7 +3,7 @@
 #include "Buffer.hpp"
 #include "MeshData.hpp"
 #include "RendererAPIs.hpp"
-#include "ShaderRegistry.hpp"
+#include "ShaderResourceRegistry.hpp"
 #include "Renderers/SimpleMeshRenderer.hpp"
 #include "SmallWheel/Utils/RefCounted.hpp"
 
@@ -24,7 +24,7 @@ namespace swheel {
         virtual void Clear() const = 0;
 
         virtual std::unique_ptr<Window> CreateWindow(const std::string& title, int width, int height) const;
-        virtual RefCounted<Shader> CreateShader(const ShaderRegistry::Entry& vertexEntry, const ShaderRegistry::Entry& fragmentEntry) const;
+        virtual RefCounted<Shader> CreateShader(const ShaderResourceRegistry::Entry& vertexEntry, const ShaderResourceRegistry::Entry& fragmentEntry) const;
         virtual std::unique_ptr<IndexBuffer> CreateIndexBuffer(uint32_t* indecies, uint32_t size) const;
         virtual std::unique_ptr<VertexBuffer> CreateVertexBuffer(float* vertices, uint32_t size) const;
         virtual std::unique_ptr<Mesh> CreateMeshInstance(const MeshData& meshData) const;

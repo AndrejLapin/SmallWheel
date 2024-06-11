@@ -26,7 +26,7 @@ namespace swheel {
         SW_ASSERT(false);
     }
 
-    RefCounted<Shader> GraphicsBackend::CreateShader(const ShaderRegistry::Entry& vertexEntry, const ShaderRegistry::Entry& fragmentEntry) const {
+    RefCounted<Shader> GraphicsBackend::CreateShader(const ShaderResourceRegistry::Entry& vertexEntry, const ShaderResourceRegistry::Entry& fragmentEntry) const {
         switch (m_type) {
         case RendererAPI::OpenGL: return RefCounted<OpenGLShader>::Make(vertexEntry, fragmentEntry);
         }

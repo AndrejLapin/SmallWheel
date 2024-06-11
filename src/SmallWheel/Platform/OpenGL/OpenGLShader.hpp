@@ -2,13 +2,13 @@
 
 #include "glad/gl.h"
 #include "SmallWheel/GraphicsBackend/Shader.hpp"
-#include "SmallWheel/GraphicsBackend/ShaderRegistry.hpp"
+#include "SmallWheel/GraphicsBackend/ShaderResourceRegistry.hpp"
 #include "SmallWheel/Utils/Result.hpp"
 
 namespace swheel {
     class OpenGLShader : public Shader {
     public:
-        OpenGLShader(const ShaderRegistry::Entry& vertexEntry, const ShaderRegistry::Entry& fragmentEntry);
+        OpenGLShader(const ShaderResourceRegistry::Entry& vertexEntry, const ShaderResourceRegistry::Entry& fragmentEntry);
         ~OpenGLShader();
 
         void Load() override;

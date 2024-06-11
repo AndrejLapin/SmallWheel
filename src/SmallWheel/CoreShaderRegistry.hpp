@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GraphicsBackend/ShaderRegistry.hpp"
+#include "GraphicsBackend/ShaderResourceRegistry.hpp"
 
 namespace swheel {
     class CoreShaderRegistry {
@@ -14,9 +14,9 @@ namespace swheel {
     public:
         CoreShaderRegistry() = default;
         CoreShaderRegistry(const std::string& resourcesPath);
-        const ShaderRegistry::Entry& GetEntry(Type type) const; 
+        const ShaderResourceRegistry::Entry& GetEntry(Type type) const; 
 
     private:
-        ShaderRegistry registry;
+        ShaderResourceRegistry registry;
     };
 }
