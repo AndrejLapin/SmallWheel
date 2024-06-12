@@ -5,13 +5,15 @@
 
 extern swheel::Application* swheel::CreateApplication();
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     swheel::EngineConfiguration configuration;
     swheel::Application* app = swheel::CreateApplication();
-    if (configuration.ParseArguments(argc, argv)) {
-       app->InitialiseApplication(configuration);
-       app->Run(); 
+    if (!configuration.ParseArguments(argc, argv)) {
+        return 1;
     }
+    app->InitialiseApplication(configuration);
+    app->OnApplicationInitialized();
+    app->Run(); 
     delete app;
+    return 0;
 }

@@ -10,6 +10,8 @@ namespace swheel {
         SimpleMeshRender(RendererAPI api): m_API(api) {}
         void DrawMesh(Shader& shader, Mesh& mesh) const;
 
+        void BeginScene();
+
     private:
         const RendererAPI m_API;
     };

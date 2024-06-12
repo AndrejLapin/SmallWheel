@@ -5,6 +5,7 @@
 #include "Imgui/ImguiLayer.hpp"
 #include "Window.hpp"
 #include "Platform/OpenGL/OpenGLWindow.hpp"
+#include "SDL_timer.h"
 #include "SmallWheel/GraphicsBackend/RendererAPIs.hpp"
 #include "SmallWheel/Layering/ShaderManagerLayer.hpp"
 #include "Utils/RefCounted.hpp"
@@ -81,6 +82,20 @@ namespace swheel {
         }
     }
 
+    /*
+    I think it would make a lot of sense if rendering happend in a seperate function from Update
+    First we would Update all the layers and did all the OnEvent things
+    Later we would need to call render function?
+    When rendering an object we need to know what shader and renderer to use to render it
+    How to we choose what renderer gets used, maybe use the same renderer for everything for now
+    When creating an object that will get rendered it should be part of some list if it is visible, 
+    if not, we should remove it from thatl ist, or maybe just have a simple flag m_Visible
+    We would have to go through all of those objects and submit them to the renderer
+    Later on the renderer decides what to do with these objects,
+    maybe it will need to "batch" some objects using the same shader
+    although this type of batching should be happening automatically
+    */
+
     void Application::Run() {
         Event event;
 
@@ -95,16 +110,41 @@ namespace swheel {
         std::unique_ptr<Mesh> mesh = m_backend->CreateMeshInstance(meshData);
         mesh->Load();
 
+        float lastTime = SDL_GetTicks();
+        float deltaTime = 0.0f;
+        float currentTime;
         do {
+
             m_backend->Clear();
             mesh->Reload();
             auto& shader = *m_shader;
             m_backend->GetSimpleRenderer().DrawMesh(*m_shader, *mesh);
-            m_window->OnUpdate();
+
+            currentTime = SDL_GetTicks();
+            deltaTime = currentTime - lastTime;
+            m_window->OnUpdate(deltaTime);
+            lastTime = currentTime;
 
             while(event.PollNextEvent()) {
                 m_window->OnEvent(event);
             }
         } while (!m_window->IsClosed());
+    }
+
+    GraphicsBackend& Application::GetGraphicsBackend() {
+        SW_ASSERT_LOG(m_backend.get(),
+            "Application backend has not been initialized yet! Gets initialized after \"SetConfigurationDefaults\" call.");
+        return *m_backend.get();
+    }
+
+
+    void Application::PushLayer(RefCounted<Layer> layer) {
+        SW_ASSERT_LOG(m_window.get(), "Window has not been initialized yet! Gets initialized after \"SetConfigurationDefaults\" call.");
+        m_window->PushLayer(layer);
+    }
+
+    void Application::PushOverlay(RefCounted<Layer> layer) {
+        SW_ASSERT_LOG(m_window.get(), "Window has not been initialized yet! Gets initialized after \"SetConfigurationDefaults\" call.");
+        m_window->PushOverlay(layer);
     }
 }

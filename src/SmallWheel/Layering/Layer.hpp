@@ -11,7 +11,7 @@ namespace  swheel {
 
         virtual void OnAttach(const Window* window) {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(float deltaTime) {}
         virtual void OnEvent(Event& event) {}
 
         inline const std::string& GetDebugName() const { return m_debugName; }

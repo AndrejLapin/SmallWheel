@@ -30,7 +30,7 @@ namespace swheel {
         m_layerImpl.reset(nullptr);
     }
 
-    void ImguiLayer::OnUpdate() {
+    void ImguiLayer::OnUpdate(float deltaTime) {
         m_layerImpl->ImguiFrameBegin();
 
         static std::vector<std::string> labels = {

@@ -11,7 +11,7 @@ namespace swheel {
         ~OpenGLWindow() override;
 
         void OnEvent(Event& event) override;
-        void OnUpdate() override;
+        void OnUpdate(float deltaTime) override;
         bool IsClosed() const override { return m_closed; }
 
         void PushLayer(RefCounted<Layer> layer) override;

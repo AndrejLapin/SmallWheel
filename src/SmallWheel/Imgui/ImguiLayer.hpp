@@ -14,7 +14,7 @@ namespace swheel {
 
         void OnAttach(const Window* window) override;
         void OnDetach() override;
-        void OnUpdate() override;
+        void OnUpdate(float deltaTime) override;
         void OnEvent(Event& event) override;
 
     private:

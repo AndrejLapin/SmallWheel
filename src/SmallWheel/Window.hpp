@@ -13,7 +13,7 @@ namespace swheel {
         virtual ~Window() = default;
 
         virtual void OnEvent(Event& event) = 0;
-        virtual void OnUpdate() = 0;
+        virtual void OnUpdate(float deltaTime) = 0;
         virtual bool IsClosed() const = 0;
 
         virtual void PushLayer(RefCounted<Layer> layer) = 0;

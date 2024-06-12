@@ -11,6 +11,7 @@ namespace swheel {
     class Window;
     class Shader;
     class IndexBuffer;
+    class Layer;
     class VertexBuffer;
 
     // SDL based application
@@ -24,8 +25,14 @@ namespace swheel {
         virtual ~Application();
 
         virtual void SetConfigurationDefaults(EngineConfiguration& configuration) {};
+        virtual void OnApplicationInitialized() {};
         void InitialiseApplication(EngineConfiguration& configuration);
         void Run();
+    
+    protected:
+        GraphicsBackend& GetGraphicsBackend();
+        void PushLayer(RefCounted<Layer> layer);
+        void PushOverlay(RefCounted<Layer> layer);
 
     private:
         SDLLifetime m_sdlLifetime;

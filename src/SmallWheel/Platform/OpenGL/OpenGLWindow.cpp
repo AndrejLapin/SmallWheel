@@ -56,9 +56,9 @@ namespace swheel {
         }
     }
 
-    void OpenGLWindow::OnUpdate() {
+    void OpenGLWindow::OnUpdate(float deltaTime) {
         for (auto& layer : m_layerStack) {
-            layer->OnUpdate();
+            layer->OnUpdate(deltaTime);
         }
         // do stuff with imgui
         // seperate imgui layer when pushing?
