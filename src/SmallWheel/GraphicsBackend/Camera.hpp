@@ -5,21 +5,15 @@
 namespace swheel {
     class Camera {
     public:
-        Camera(glm::mat4x4 transformMatrix, glm::mat4x4 viewMatrix);
+        static Camera CreatePerspective(glm::vec3 position, float fieldOfView);
+
+        Camera(glm::mat4x4 transformMatrix, glm::mat4x4 projectionMatrix);
 
         const glm::mat4x4& GetTransform() const { return m_transformMatrix; }
-        const glm::mat4x4& GetViewMatrix() const { return m_viewMatrix;}
+        const glm::mat4x4& GetProjectionMatrix() const { return m_projectionMatrix;}
 
     private:
         glm::mat4x4 m_transformMatrix;
-        glm::mat4x4 m_viewMatrix;
-    };
-
-    class PerspectiveCamera {
-    public:
-        PerspectiveCamera(glm::vec3 position, float fieldOfView);
-        Camera& GetCamera() { return m_camera; }
-    private:
-        Camera m_camera;
+        glm::mat4x4 m_projectionMatrix;
     };
 }
